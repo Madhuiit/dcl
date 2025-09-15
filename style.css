@@ -69,3 +69,38 @@ header h1 { font-size: 2rem; }
 .list-item .player-id { font-size: 0.9rem; font-weight: 700; background-color: var(--primary-bg); padding: 4px 8px; border-radius: 5px; margin-left: 10px; }
 .re-auction-icon { color: var(--accent-gold); margin-left: 15px; transition: transform 0.2s; }
 .list-item-sold:hover .re-auction-icon { transform: scale(1.2); }
+
+
+
+#login-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://i.ibb.co/yYwH6V1/cricket-bg.jpg') no-repeat center center/cover;
+}
+
+/* Find the existing #login-screen rule and add the new line */
+
+#login-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://i.ibb.co/yYwH6V1/cricket-bg.jpg') no-repeat center center/cover;
+    
+    /* ADD THIS LINE for a cool parallax/fixed effect */
+    background-attachment: fixed; 
+}
+
+/* ======================================= */
+/* === Responsive Background for Mobile === */
+/* ======================================= */
+
+/* This will apply ONLY on screens 768px or smaller */
+@media (max-width: 768px) {
+  #login-screen {
+    /* Replace the URL below with your new, vertical mobile background image */
+    background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://your-new-mobile-image-url.jpg');
+  }
+}
