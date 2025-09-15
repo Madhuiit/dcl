@@ -1,0 +1,71 @@
+:root {
+    --primary-bg: #28130a;
+    --secondary-bg: #001f54;
+    --card-bg: #03346e;
+    --text-light: #fefcfb;
+    --text-dark: #333;
+    --accent-gold: #fca311;
+    --sold-green: #2a9d8f;
+    --unsold-red: #e76f51;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Poppins', sans-serif; background-color: var(--primary-bg); color: var(--text-light); overflow: hidden; }
+.hidden { display: none !important; }
+
+/* --- Login Screen --- */
+#login-screen { display: flex; justify-content: center; align-items: center; height: 100vh; background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://i.ibb.co/yYwH6V1/cricket-bg.jpg') no-repeat center center/cover; }
+.login-box { background: var(--secondary-bg); padding: 40px; border-radius: 15px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--accent-gold); }
+.login-logo { width: 100px; margin-bottom: 20px; }
+.login-box h2 { margin-bottom: 20px; color: var(--accent-gold); }
+#password { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem; }
+.login-box button { width: 100%; padding: 12px; background-color: var(--accent-gold); color: var(--primary-bg); border: none; border-radius: 5px; cursor: pointer; font-size: 1.1rem; font-weight: 600; transition: background-color 0.3s; }
+.login-box button:hover { background-color: #e8920a; }
+.error-message { color: var(--unsold-red); margin-top: 15px; height: 20px; }
+
+/* --- Main App Container --- */
+#app-container { display: flex; flex-direction: column; height: 100vh; }
+header { background: var(--secondary-bg); text-align: center; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); border-bottom: 2px solid var(--accent-gold); }
+header h1 { font-size: 2rem; }
+.auction-layout { display: flex; flex: 1; padding: 20px; gap: 20px; overflow: hidden; }
+.auction-panel, .lists-panel { display: flex; flex-direction: column; gap: 20px; }
+.auction-panel { flex: 2; }
+.lists-panel { flex: 1; }
+
+/* --- Player Card --- */
+#player-card { background: var(--card-bg); border-radius: 15px; padding: 30px; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; box-shadow: inset 0 0 15px rgba(0,0,0,0.5); }
+.card-placeholder { color: #a9a9a9; font-size: 1.5rem; padding: 20px; }
+.player-icon { width: 120px; height: 120px; background-color: var(--primary-bg); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 3rem; font-weight: 700; color: var(--accent-gold); border: 3px solid var(--accent-gold); margin-bottom: 20px; }
+#player-name { font-size: 2.5rem; font-weight: 700; margin-bottom: 5px; }
+#father-name { font-size: 1.2rem; color: #ccc; margin-bottom: 15px; }
+#player-id { background: var(--accent-gold); color: var(--primary-bg); padding: 5px 15px; border-radius: 20px; font-weight: 600; }
+
+/* --- Controls --- */
+#auction-controls { display: flex; flex-direction: column; gap: 15px; }
+#auction-controls button { padding: 15px; font-size: 1.2rem; font-weight: 600; border: none; border-radius: 8px; cursor: pointer; transition: all 0.2s ease-in-out; }
+#auction-controls button:disabled { background-color: #555; color: #999; cursor: not-allowed; }
+#next-btn { background-color: var(--accent-gold); color: var(--primary-bg); }
+#next-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
+.decision-buttons { display: grid; grid-template-columns: 1fr; }
+.sold-btn { background-color: var(--sold-green); color: white; }
+#undo-btn { background-color: #6c757d; color: white; }
+
+/* --- Player Lists --- */
+.player-list-container { background: var(--secondary-bg); border-radius: 10px; padding: 20px; display: flex; flex-direction: column; overflow: hidden; flex-basis: 50%; }
+.player-list-container h2 { text-align: center; margin-bottom: 15px; padding-bottom: 10px; display: flex; justify-content: center; align-items: center; gap: 10px; }
+.sold-container h2 { border-bottom: 2px solid var(--sold-green); }
+.unsold-container h2 { border-bottom: 2px solid var(--unsold-red); }
+.list-count { font-size: 1rem; background-color: var(--primary-bg); padding: 2px 10px; border-radius: 15px; }
+.player-list { overflow-y: auto; padding-right: 10px; }
+.player-list::-webkit-scrollbar { width: 8px; }
+.player-list::-webkit-scrollbar-track { background: var(--primary-bg); border-radius: 4px; }
+.player-list::-webkit-scrollbar-thumb { background: var(--accent-gold); border-radius: 4px; }
+
+.list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-radius: 5px; margin-bottom: 8px; font-weight: 600; animation: fadeIn 0.5s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+.list-item-sold { background-color: rgba(42, 157, 143, 0.2); border-left: 5px solid var(--sold-green); cursor: pointer; }
+.list-item-unsold { background-color: rgba(231, 111, 81, 0.2); border-left: 5px solid var(--unsold-red); }
+.list-item-sold:hover { background-color: rgba(42, 157, 143, 0.4); }
+.list-item .player-info { flex-grow: 1; }
+.list-item .player-id { font-size: 0.9rem; font-weight: 700; background-color: var(--primary-bg); padding: 4px 8px; border-radius: 5px; margin-left: 10px; }
+.re-auction-icon { color: var(--accent-gold); margin-left: 15px; transition: transform 0.2s; }
+.list-item-sold:hover .re-auction-icon { transform: scale(1.2); }
