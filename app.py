@@ -179,5 +179,7 @@ def export_excel():
                      as_attachment=True, download_name='DCL_Auction_Report.xlsx')
 
 if __name__ == '__main__':
+    from waitress import serve
     load_state()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    print("Starting development server with Waitress on http://127.0.0.1:5000")
+    serve(app, host='0.0.0.0', port=5000)
