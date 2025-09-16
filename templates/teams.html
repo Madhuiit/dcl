@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block title %}Team Rosters{% endblock %}
+{% block content %}
+<div class="teams-page-container">
+    <h1>Team Rosters & Points</h1>
+    <div class="teams-grid">
+        {% for team_name, team_data in state.teams|dictsort %}
+            <div class="team-card">
+                <div class="team-card-header">
+                    <h2>{{ team_name }}</h2>
+                    <span class="team-points">{{ "{:,}".format(team_data.points) }} PTS</span>
+                </div>
+                <div class="team-roster">
+                    {% if team_data.players %}
+                        <ul>
+                        {% for player_id in team_data.players %}
+                            {% set player = state.players[player_id|string] %}
+                            <li>
+                                <span class="roster-player-name">{{ player.player_name }}</span>
+                                <span class="roster-player-id">ID: {{ player.id }}</span>
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="no-players">No players bought yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

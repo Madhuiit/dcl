@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block title %}Auction Room{% endblock %}
+{% block content %}
+<div class="auction-layout">
+    <div class="auction-panel">
+        <div id="player-card">
+            </div>
+        
+        <div id="auction-controls" class="hidden">
+            <button id="next-btn">Next Player</button>
+            <div class="decision-buttons">
+                <button id="sold-btn">SELL PLAYER</button>
+                <button id="skip-btn">SKIP PLAYER</button>
+            </div>
+            <button id="undo-btn">Undo Last Sale</button>
+        </div>
+    </div>
+    <div class="lists-panel" id="teams-dashboard">
+        </div>
+</div>
+
+<div id="sell-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <h2>Sell Player</h2>
+        <h3 id="modal-player-name"></h3>
+        <form id="sell-form">
+            <input type="number" id="sell-points" placeholder="Enter Points" min="0" required>
+            <select id="sell-team" required>
+                <option value="" disabled selected>Select a Team</option>
+            </select>
+            <div class="modal-buttons">
+                <button type="submit" class="sold-btn">CONFIRM SALE</button>
+                <button type="button" id="modal-cancel-btn">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/auction.js') }}"></script>
+{% endblock %}

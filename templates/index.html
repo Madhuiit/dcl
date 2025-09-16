@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DCL Player Auction - Pulasar</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div id="login-screen">
+        <div class="login-box">
+            <img src="https://i.ibb.co/Cbfp1Vd/dcl-logo.png" alt="DCL Logo" class="login-logo">
+            <h2>DCL Admin Login</h2>
+            <form id="login-form">
+                <input type="password" id="password" placeholder="Enter Admin Password" required>
+                <button type="submit">Login</button>
+            </form>
+            <p id="login-error" class="error-message"></p>
+        </div>
+    </div>
+
+    <div id="app-container" class="hidden">
+        <nav class="navbar">
+            <div class="nav-title">DCL Teams</div>
+            <div class="nav-links" id="nav-teams"></div>
+            <a href="/api/export/excel" class="nav-button">Download Report</a>
+            <button id="reset-btn" class="nav-button reset-btn">Reset Auction</button>
+        </nav>
+
+        <main class="auction-layout">
+            <div class="auction-panel">
+                <div id="player-card">
+                    </div>
+                
+                <div id="auction-controls" class="hidden">
+                    <button id="next-btn">Next Player</button>
+                    <div class="decision-buttons">
+                        <button id="sold-btn">SELL PLAYER</button>
+                        <button id="skip-btn">SKIP PLAYER</button>
+                    </div>
+                    <button id="undo-btn">Undo Last Sale</button>
+                </div>
+            </div>
+
+            <div class="lists-panel" id="teams-dashboard"></div>
+        </main>
+    </div>
+
+    <div id="sell-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2>Sell Player</h2>
+            <h3 id="modal-player-name"></h3>
+            <form id="sell-form">
+                <input type="number" id="sell-points" placeholder="Enter Points (e.g., 5000)" min="0" required>
+                <select id="sell-team" required>
+                    <option value="" disabled selected>Select a Team</option>
+                </select>
+                <div class="modal-buttons">
+                    <button type="submit" class="sold-btn">CONFIRM SALE</button>
+                    <button type="button" id="modal-cancel-btn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

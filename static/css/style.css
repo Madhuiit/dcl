@@ -1,0 +1,91 @@
+
+
+
+
+/* ====== DCL AUCTION - FINAL VERSION ====== */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+:root {
+    --bg-dark: #111827; --bg-slate: #1F2937; --text-light: #F9FAFB; --text-muted: #9CA3AF;
+    --accent-amber: #F59E0B; --accent-amber-dark: #D97706; --sold-green: #10B981;
+    --unsold-red: #EF4444; --ui-border: rgba(249, 250, 251, 0.1);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Poppins', sans-serif; background-color: var(--bg-dark); color: var(--text-light); }
+.hidden { display: none !important; }
+.main-content { height: calc(100vh - 65px); }
+
+/* --- Login Screen --- */
+#login-screen { display: flex; justify-content: center; align-items: center; height: 100vh; background: url('https://i.ibb.co/yYwH6V1/cricket-bg.jpg') no-repeat center center/cover; background-attachment: fixed; }
+.login-box { background: rgba(31, 41, 55, 0.8); backdrop-filter: blur(10px); padding: 40px; border-radius: 15px; text-align: center; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); border: 1px solid var(--ui-border); width: 400px; max-width: 90%; }
+.login-logo { width: 100px; margin-bottom: 20px; }
+.login-box h2 { margin-bottom: 20px; color: var(--accent-amber); font-weight: 700; }
+#login-screen input { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid var(--ui-border); background: rgba(17, 24, 39, 0.5); color: var(--text-light); border-radius: 5px; font-size: 1rem; }
+.login-box button { width: 100%; padding: 12px; background-color: var(--accent-amber); color: var(--bg-dark); border: none; border-radius: 5px; cursor: pointer; font-size: 1.1rem; font-weight: 600; transition: background-color 0.3s; }
+.login-box button:hover { background-color: var(--accent-amber-dark); }
+.error-message { color: var(--unsold-red); margin-top: 15px; height: 20px; font-weight: 600; }
+
+/* --- Navbar --- */
+.navbar { height: 65px; display: flex; align-items: center; background-color: var(--bg-slate); padding: 0 20px; border-bottom: 2px solid var(--accent-amber); }
+.nav-title { font-size: 1.5rem; font-weight: 700; color: var(--accent-amber); }
+.nav-links { display: flex; flex-grow: 1; margin-left: 30px; }
+.nav-link { padding: 21px 15px; color: var(--text-light); text-decoration: none; font-weight: 600; transition: background-color 0.2s; white-space: nowrap; }
+.nav-link:hover { background-color: var(--bg-dark); }
+.nav-button { margin-left: 10px; background-color: var(--sold-green); color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-weight: 600; transition: background-color 0.2s; border: none; font-family: 'Poppins', sans-serif; font-size: 0.9rem; cursor: pointer; }
+.reset-btn { background-color: var(--unsold-red); }
+
+/* --- Auction Page --- */
+.auction-layout { display: flex; height: 100%; padding: 20px; gap: 20px; overflow: hidden; }
+.auction-panel { flex: 2; display: flex; flex-direction: column; gap: 20px; }
+.lists-panel { flex: 1; background: rgba(31, 41, 55, 0.5); backdrop-filter: blur(10px); border: 1px solid var(--ui-border); border-radius: 10px; padding: 20px; overflow-y: auto; }
+#player-card { flex-grow: 1; background: rgba(31, 41, 55, 0.5); backdrop-filter: blur(10px); border: 1px solid var(--ui-border); border-radius: 15px; padding: 30px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+.welcome-screen h1 { font-size: 3rem; color: var(--accent-amber); }
+#start-auction-btn { margin-top: 20px; padding: 20px 40px; font-size: 1.5rem; font-weight: 700; border-radius: 8px; cursor: pointer; background-color: var(--sold-green); color: white; border: none; }
+.player-photo { width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--accent-amber); box-shadow: 0 0 25px rgba(245, 158, 11, 0.4); margin-bottom: 20px; object-fit: cover; background-color: var(--bg-slate); }
+#player-name { font-size: 3rem; font-weight: 700; }
+#father-name { font-size: 1.3rem; color: var(--text-muted); }
+#player-id { margin-top: 15px; background: var(--accent-amber); color: var(--bg-dark); padding: 5px 15px; border-radius: 20px; font-weight: 700; }
+#auction-controls { display: flex; flex-direction: column; gap: 15px; }
+#auction-controls button { padding: 15px; font-size: 1.2rem; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; transition: all 0.2s ease-in-out; text-transform: uppercase; }
+#auction-controls button:disabled { background-color: #374151; color: #6B7280; cursor: not-allowed; }
+.decision-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+#next-btn { background-color: var(--accent-amber); color: var(--bg-dark); }
+.sold-btn { background-color: var(--sold-green); color: white; }
+#skip-btn { background-color: #4B5563; color: white; }
+#undo-btn { background-color: #6c757d; color: white; }
+.team-dashboard-item { display: flex; justify-content: space-between; align-items: center; background: rgba(17, 24, 39, 0.5); padding: 12px 15px; border-radius: 5px; margin-bottom: 8px; border-left: 4px solid var(--accent-amber); }
+.team-dashboard-item .team-name { font-weight: 600; }
+.team-dashboard-item .team-points { font-weight: 700; color: var(--sold-green); }
+
+/* --- Teams Page --- */
+.teams-page-container { padding: 30px; height: 100%; overflow-y: auto; }
+.teams-page-container h1 { text-align: center; font-size: 2.5rem; margin-bottom: 30px; color: var(--accent-amber); }
+.teams-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; }
+.team-card { background: var(--bg-slate); border-radius: 10px; border: 1px solid var(--ui-border); }
+.team-card-header { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(17,24,39,0.5); border-bottom: 1px solid var(--ui-border); }
+.team-card h2 { font-size: 1.4rem; }
+.team-roster { padding: 15px; }
+.team-roster ul { list-style: none; }
+.team-roster li { display: flex; justify-content: space-between; padding: 10px; border-radius: 4px; }
+.team-roster li:nth-child(odd) { background-color: rgba(17,24,39,0.3); }
+.roster-player-name { font-weight: 600; }
+.roster-player-id { color: var(--text-muted); }
+.no-players { color: var(--text-muted); text-align: center; padding: 20px; }
+
+/* --- Modal --- */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(5px); }
+.modal-content { background: var(--bg-slate); padding: 30px; border-radius: 10px; width: 400px; max-width: 90%; text-align: center; }
+#sell-form input, #sell-form select { width: 100%; padding: 12px; font-size: 1rem; margin-bottom: 20px; border-radius: 5px; border: 1px solid var(--ui-border); background: var(--bg-dark); color: var(--text-light); }
+.modal-buttons { display: flex; gap: 15px; }
+.modal-buttons button { flex-grow: 1; padding: 12px; font-size: 1rem; font-weight: 600; border: none; border-radius: 5px; cursor: pointer; }
+#modal-cancel-btn { background-color: #4B5563; color: white; }
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .main-content { height: calc(100vh - 55px); }
+    .navbar { height: 55px; padding: 0 10px; }
+    .nav-title { font-size: 1.2rem; }
+    .nav-links { display: none; } /* Hide links in navbar, they are on separate pages */
+    .auction-layout { flex-direction: column; }
+    #player-name { font-size: 2rem; }
+    .decision-buttons { grid-template-columns: 1fr; }
+}

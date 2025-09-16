@@ -1,197 +1,247 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- STATE MANAGEMENT ---
-    let allPlayers = [];
-    let unsoldPlayers = [];
-    let soldPlayers = [];
+    // --- GLOBAL STATE ---
+    let state = {};
     let currentPlayer = null;
-    let lastAction = { type: null, player: null };
+    let availablePlayerIds = [];
+    let auctionPhase = 'login'; // 'login', 'welcome', 'live'
 
-    // --- DOM ELEMENTS ---
-    const loginScreen = document.getElementById('login-screen');
-    const loginForm = document.getElementById('login-form');
-    const passwordInput = document.getElementById('password');
-    const loginError = document.getElementById('login-error');
-    
-    const appContainer = document.getElementById('app-container');
-    const playerCard = document.getElementById('player-card');
-    
-    const nextBtn = document.getElementById('next-btn');
-    const soldBtn = document.getElementById('sold-btn');
-    const undoBtn = document.getElementById('undo-btn');
+    // --- DOM ELEMENT MAPPING ---
+    const ui = {
+        loginScreen: document.getElementById('login-screen'),
+        appContainer: document.getElementById('app-container'),
+        loginForm: document.getElementById('login-form'),
+        passwordInput: document.getElementById('password'),
+        loginError: document.getElementById('login-error'),
+        playerCard: document.getElementById('player-card'),
+        auctionControls: document.getElementById('auction-controls'),
+        nextBtn: document.getElementById('next-btn'),
+        soldBtn: document.getElementById('sold-btn'),
+        skipBtn: document.getElementById('skip-btn'),
+        undoBtn: document.getElementById('undo-btn'),
+        navTeams: document.getElementById('nav-teams'),
+        teamsDashboard: document.getElementById('teams-dashboard'),
+        resetBtn: document.getElementById('reset-btn'),
+        sellModal: document.getElementById('sell-modal'),
+        sellForm: document.getElementById('sell-form'),
+        modalPlayerName: document.getElementById('modal-player-name'),
+        sellPointsInput: document.getElementById('sell-points'),
+        sellTeamSelect: document.getElementById('sell-team'),
+        modalCancelBtn: document.getElementById('modal-cancel-btn'),
+    };
 
-    const soldPlayersList = document.getElementById('sold-players-list');
-    const unsoldPlayersList = document.getElementById('unsold-players-list');
-    const soldCountEl = document.getElementById('sold-count');
-    const unsoldCountEl = document.getElementById('unsold-count');
-    
-    // --- CONFIGURATION ---
-    const ADMIN_PASSWORD = "dcl"; // Set your simple admin password here
+    const ADMIN_PASSWORD = "dcl";
 
-    // --- LOGIN LOGIC ---
-    loginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        if (passwordInput.value === ADMIN_PASSWORD) {
-            loginScreen.classList.add('hidden');
-            appContainer.classList.remove('hidden');
-            initAuction();
-        } else {
-            loginError.textContent = 'Incorrect Password. Please try again.';
-            passwordInput.value = '';
-        }
-    });
-
-    // --- AUCTION INITIALIZATION ---
-    async function initAuction() {
+    // --- API FUNCTIONS ---
+    async function apiCall(endpoint, method = 'GET', body = null) {
+        const options = { method, headers: { 'Content-Type': 'application/json' } };
+        if (body) options.body = JSON.stringify(body);
         try {
-            const response = await fetch('players.json');
-            allPlayers = await response.json();
-            // NEW: All players start in the 'unsold' list
-            unsoldPlayers = [...allPlayers];
-            updateUI();
+            const response = await fetch(endpoint, options);
+            if (!response.ok) throw new Error(`API call failed: ${response.statusText}`);
+            return await response.json();
         } catch (error) {
-            console.error("Could not load player data:", error);
-            playerCard.innerHTML = `<div class="card-placeholder"><p style="color:red;">Error: Could not load players.json.</p></div>`;
+            console.error(`Error with ${method} ${endpoint}:`, error);
+            alert(`An error occurred: ${error.message}`);
+            return null;
         }
     }
     
-    // --- CORE AUCTION FUNCTIONS ---
-    function getNextPlayer() {
-        if (unsoldPlayers.length === 0) {
-            showAuctionComplete();
+    // --- MAIN RENDER CONTROLLER ---
+    function render() {
+        if (auctionPhase === 'login') {
+            ui.loginScreen.classList.remove('hidden');
+            ui.appContainer.classList.add('hidden');
             return;
         }
-        // If a player is already on screen, put them back in the unsold list
-        if (currentPlayer) {
-            unsoldPlayers.push(currentPlayer);
+
+        // If not login, show the app
+        ui.loginScreen.classList.add('hidden');
+        ui.appContainer.classList.remove('hidden');
+
+        // Update parts of the app that are always visible
+        renderNav();
+        renderTeamsDashboard();
+
+        // Update the main panel based on the phase
+        if (auctionPhase === 'welcome') {
+            renderWelcomeScreen();
+            ui.auctionControls.classList.add('hidden');
+        } else if (auctionPhase === 'live') {
+            renderPlayerCard();
+            ui.auctionControls.classList.remove('hidden');
         }
 
-        const randomIndex = Math.floor(Math.random() * unsoldPlayers.length);
-        currentPlayer = unsoldPlayers.splice(randomIndex, 1)[0];
-        
-        lastAction = { type: 'next', player: currentPlayer }; // For undoing a 'next' click
-        updateUI();
-        displayPlayer(currentPlayer);
-    }
-
-    function sellPlayer() {
-        if (!currentPlayer) return;
-        soldPlayers.push(currentPlayer);
-        lastAction = { type: 'sell', player: currentPlayer };
-        currentPlayer = null;
-        updateUI();
-    }
-    
-    function reAuctionPlayer(playerId) {
-        // If a player is already on the card, put them back into the unsold list first
-        if (currentPlayer) {
-            unsoldPlayers.push(currentPlayer);
-            currentPlayer = null;
-        }
-
-        const playerIndex = soldPlayers.findIndex(p => p.id === playerId);
-        if (playerIndex > -1) {
-            const playerToReAuction = soldPlayers.splice(playerIndex, 1)[0];
-            currentPlayer = playerToReAuction;
-            lastAction = { type: 'reauction', player: playerToReAuction };
-            updateUI();
-            displayPlayer(currentPlayer);
-        }
-    }
-
-    function undoLastAction() {
-        if (!lastAction.player) return;
-
-        if (lastAction.type === 'sell') {
-            const playerToUndo = soldPlayers.pop();
-            unsoldPlayers.push(playerToUndo);
-        }
-        
-        // Clear the current player if the undone player was the one on screen
-        if (currentPlayer && currentPlayer.id === lastAction.player.id) {
-            currentPlayer = null;
-        }
-        
-        lastAction = { type: null, player: null }; // Clear last action
-        updateUI();
-    }
-
-    // --- UI UPDATE FUNCTIONS ---
-    function updateUI() {
-        updateLists();
-        updateButtonStates();
-        if (!currentPlayer) {
-            displayInitialMessage();
-        }
-    }
-
-    function displayPlayer(player) {
-        const playerInitial = player.player_name.charAt(0);
-        playerCard.innerHTML = `
-            <div class="player-icon">${playerInitial}</div>
-            <h2 id="player-name">${player.player_name}</h2>
-            <p id="father-name">S/O: ${player.father_name}</p>
-            <span id="player-id">ID: ${player.id}</span>
-        `;
-    }
-
-    function displayInitialMessage() {
-         playerCard.innerHTML = `<div class="card-placeholder"><p>Click "Next Player" to draw from the UNSOLD list!</p></div>`;
-    }
-    
-    function showAuctionComplete() {
-        playerCard.innerHTML = `<div class="card-placeholder"><h2>Auction Completed!</h2><p>All players have been processed.</p></div>`;
-        currentPlayer = null;
         updateButtonStates();
     }
-
-    function updateLists() {
-        soldPlayersList.innerHTML = '';
-        unsoldPlayersList.innerHTML = '';
-
-        soldPlayers.forEach(player => {
-            const item = document.createElement('div');
-            item.className = 'list-item list-item-sold';
-            item.dataset.id = player.id; // Add data-id for click identification
-            item.innerHTML = `
-                <span class="player-info">${player.player_name}</span>
-                <i class="fa-solid fa-retweet re-auction-icon" title="Re-Auction This Player"></i>
-                <span class="player-id">ID: ${player.id}</span>
-            `;
-            soldPlayersList.appendChild(item);
+    
+    // --- COMPONENT RENDER FUNCTIONS ---
+    function renderNav() {
+        ui.navTeams.innerHTML = '';
+        Object.keys(state.teams).forEach(teamName => {
+            const link = document.createElement('a');
+            link.className = 'nav-link';
+            link.href = '#';
+            link.textContent = teamName;
+            ui.navTeams.appendChild(link);
         });
-
-        unsoldPlayers.forEach(player => {
-            const item = document.createElement('div');
-            item.className = 'list-item list-item-unsold';
-            item.innerHTML = `
-                <span class="player-info">${player.player_name}</span>
-                <span class="player-id">ID: ${player.id}</span>
-            `;
-            unsoldPlayersList.appendChild(item);
-        });
-        
-        // Update counts
-        soldCountEl.textContent = `(${soldPlayers.length})`;
-        unsoldCountEl.textContent = `(${unsoldPlayers.length})`;
     }
 
+    function renderTeamsDashboard() {
+        ui.teamsDashboard.innerHTML = '<h2>Teams Dashboard</h2>';
+        Object.keys(state.teams).sort().forEach(teamName => {
+            const team = state.teams[teamName];
+            const item = document.createElement('div');
+            item.className = 'team-dashboard-item';
+            item.innerHTML = `<span class="team-name">${teamName} (${team.players.length})</span><span class="team-points">${team.points.toLocaleString()}</span>`;
+            ui.teamsDashboard.appendChild(item);
+        });
+    }
+
+    function renderWelcomeScreen() {
+        ui.playerCard.innerHTML = `
+            <div class="welcome-screen">
+                <h1>Welcome to the DCL Auction</h1>
+                <p>${availablePlayerIds.length} players are ready to be auctioned.</p>
+                <button id="start-auction-btn">Start Auction</button>
+            </div>`;
+        document.getElementById('start-auction-btn').addEventListener('click', () => {
+            auctionPhase = 'live';
+            render();
+        });
+    }
+
+    function renderPlayerCard() {
+        if (currentPlayer) {
+            const photoPath = currentPlayer.photo && currentPlayer.photo.trim() !== '' ? `/${currentPlayer.photo}` : null;
+            const initial = currentPlayer.player_name ? currentPlayer.player_name.charAt(0).toUpperCase() : '?';
+            const iconHTML = photoPath
+                ? `<img src="${photoPath}" alt="${currentPlayer.player_name}" class="player-photo">`
+                : `<div class="player-icon">${initial}</div>`;
+
+            ui.playerCard.innerHTML = `
+                ${iconHTML}
+                <h2 id="player-name">${currentPlayer.player_name}</h2>
+                <p id="father-name">S/O: ${currentPlayer.father_name}</p>
+                <span id="player-id">ID: ${currentPlayer.id}</span>`;
+        } else {
+            ui.playerCard.innerHTML = `<div class="card-placeholder">
+                <p>${availablePlayerIds.length > 0 ? 'Click "Next Player" for the next round!' : 'All players have been sold!'}</p>
+            </div>`;
+        }
+    }
+    
     function updateButtonStates() {
-        soldBtn.disabled = !currentPlayer;
-        nextBtn.disabled = !!currentPlayer || unsoldPlayers.length === 0;
-        undoBtn.disabled = lastAction.type !== 'sell';
+        if (auctionPhase !== 'live') return;
+        ui.soldBtn.disabled = !currentPlayer;
+        ui.skipBtn.disabled = !currentPlayer;
+        ui.nextBtn.disabled = !!currentPlayer || availablePlayerIds.length === 0;
+        ui.undoBtn.disabled = !state.last_transaction || state.last_transaction.type !== 'sell';
     }
 
-    // --- EVENT LISTENERS ---
-    nextBtn.addEventListener('click', getNextPlayer);
-    soldBtn.addEventListener('click', sellPlayer);
-    undoBtn.addEventListener('click', undoLastAction);
-    
-    // Event listener for re-auctioning a sold player
-    soldPlayersList.addEventListener('click', (e) => {
-        const listItem = e.target.closest('.list-item-sold');
-        if (listItem) {
-            const playerId = parseInt(listItem.dataset.id, 10);
-            reAuctionPlayer(playerId);
+    // --- EVENT HANDLERS ---
+    async function handleLogin(e) {
+        e.preventDefault();
+        if (ui.passwordInput.value === ADMIN_PASSWORD) {
+            auctionPhase = 'welcome';
+            const initialData = await apiCall('/api/state');
+            if (initialData) {
+                state = initialData;
+                availablePlayerIds = [...state.unsold_player_ids];
+                render();
+            }
+        } else {
+            ui.loginError.textContent = 'Incorrect Password.';
         }
-    });
+    }
+    
+    function handleNextPlayer() {
+        if (availablePlayerIds.length > 0) {
+            const randomIndex = Math.floor(Math.random() * availablePlayerIds.length);
+            const nextPlayerId = availablePlayerIds.splice(randomIndex, 1)[0];
+            currentPlayer = state.players[String(nextPlayerId)];
+            render();
+        }
+    }
+
+    function handleSkipPlayer() {
+        if (currentPlayer) {
+            availablePlayerIds.push(currentPlayer.id);
+            currentPlayer = null;
+            render();
+        }
+    }
+
+    function handleOpenSellModal() {
+        if (!currentPlayer) return;
+        ui.modalPlayerName.textContent = currentPlayer.player_name;
+        ui.sellTeamSelect.innerHTML = '<option value="" disabled selected>Select a Team</option>';
+        Object.keys(state.teams).forEach(teamName => {
+            const team = state.teams[teamName];
+            const option = document.createElement('option');
+            option.value = teamName;
+            option.textContent = `${teamName} (${team.points.toLocaleString()} PTS)`;
+            ui.sellTeamSelect.appendChild(option);
+        });
+        ui.sellModal.classList.remove('hidden');
+    }
+
+    async function handleConfirmSale(e) {
+        e.preventDefault();
+        const points = parseInt(ui.sellPointsInput.value, 10);
+        const teamName = ui.sellTeamSelect.value;
+        const team = state.teams[teamName];
+
+        if (points < 0) {
+            alert("Points cannot be negative."); return;
+        }
+        if (points > team.points) {
+            alert(`${teamName} does not have enough points!`); return;
+        }
+
+        const newState = await apiCall('/api/sell', 'POST', {
+            playerId: currentPlayer.id, teamName, points
+        });
+        if (newState) {
+            state = newState;
+            currentPlayer = null;
+            ui.sellModal.classList.add('hidden');
+            ui.sellForm.reset();
+            render();
+        }
+    }
+    
+    async function handleUndo() {
+        const newState = await apiCall('/api/undo', 'POST');
+        if (newState) {
+            state = newState;
+            currentPlayer = null; // Clear the card after undo
+            availablePlayerIds = [...state.unsold_player_ids];
+            render();
+        }
+    }
+
+    async function handleReset() {
+        if (confirm("ARE YOU SURE you want to reset the entire auction? All progress will be lost!")) {
+            const newState = await apiCall('/api/reset', 'POST');
+            if (newState) {
+                state = newState;
+                currentPlayer = null;
+                auctionPhase = 'welcome';
+                availablePlayerIds = [...state.unsold_player_ids];
+                render();
+            }
+        }
+    }
+    
+    // --- INITIAL SETUP & EVENT LISTENERS ---
+    ui.loginForm.addEventListener('submit', handleLogin);
+    ui.nextBtn.addEventListener('click', handleNextPlayer);
+    ui.skipBtn.addEventListener('click', handleSkipPlayer);
+    ui.soldBtn.addEventListener('click', handleOpenSellModal);
+    ui.modalCancelBtn.addEventListener('click', () => ui.sellModal.classList.add('hidden'));
+    ui.sellForm.addEventListener('submit', handleConfirmSale);
+    ui.undoBtn.addEventListener('click', handleUndo);
+    ui.resetBtn.addEventListener('click', handleReset);
+
+    render(); // Initial render for the login screen
 });
