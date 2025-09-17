@@ -35,17 +35,37 @@ def save_state():
         json.dump(auction_state, f, indent=4)
 
 def initialize_state():
+    """Initialize a fresh auction state from the base players file."""
     global auction_state
-    with open(PLAYERS_FILE, 'r', encoding='utf-8') as f:
-        players = json.load(f)
-    auction_state = {
-        "players": {str(p['id']): p for p in players},
-        "teams": {name: {"points": INITIAL_TEAM_POINTS, "players": []} for name in TEAMS},
-        "unsold_player_ids": [p['id'] for p in players],
-        "last_transaction": None
-    }
-    save_state()
+    print("Attempting to initialize a new auction state...")
+    try:
+        # Check if the file exists before trying to open it
+        if not os.path.exists(PLAYERS_FILE):
+            print(f"CRITICAL ERROR: The file '{PLAYERS_FILE}' was not found.")
+            print(f"Please make sure '{PLAYERS_FILE}' is in the root directory of your project.")
+            # We set a default empty state to prevent a crash, but the app will be empty
+            auction_state = {"players": {}, "teams": {}, "unsold_player_ids": [], "last_transaction": None}
+            return
 
+        with open(PLAYERS_FILE, 'r', encoding='utf-8') as f:
+            players = json.load(f)
+        
+        auction_state = {
+            "players": {str(p['id']): p for p in players},
+            "teams": {name: {"points": INITIAL_TEAM_POINTS, "players": []} for name in TEAMS},
+            "unsold_player_ids": [p['id'] for p in players],
+            "last_transaction": None
+        }
+        save_state()
+        print("New auction state initialized SUCCESSFULLY.")
+
+    except json.JSONDecodeError as e:
+        print(f"CRITICAL ERROR: The '{PLAYERS_FILE}' file has a JSON syntax error: {e}")
+        print("Please validate your JSON file content.")
+        auction_state = {"players": {}, "teams": {}, "unsold_player_ids": [], "last_transaction": None}
+    except Exception as e:
+        print(f"An unexpected error occurred during initialization: {e}")
+        auction_state = {"players": {}, "teams": {}, "unsold_player_ids": [], "last_transaction": None}
 # --- AUTHENTICATION & PAGE ROUTES ---
 @app.route('/login', methods=['GET', 'POST'])
 def login():
