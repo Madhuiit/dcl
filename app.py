@@ -198,6 +198,47 @@ def export_excel():
     return send_file(output, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                      as_attachment=True, download_name='DCL_Auction_Report.xlsx')
 
+
+# ===============================================================
+#  DEBUGGING ROUTE - ADD THIS ENTIRE FUNCTION
+# ===============================================================
+@app.route('/debug')
+def debug():
+    """A special route to display server environment and state for debugging."""
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
+    # Check current working directory and its contents
+    cwd = os.getcwd()
+    dir_contents = os.listdir('.')
+
+    # Check if players.json exists and what its case is
+    players_file_exists = os.path.exists(PLAYERS_FILE)
+    
+    # Try to read players.json
+    players_content = "File could not be read."
+    if players_file_exists:
+        try:
+            with open(PLAYERS_FILE, 'r', encoding='utf-8') as f:
+                # Try to load it as JSON to also check for syntax errors
+                json.load(f)
+                players_content = f"File '{PLAYERS_FILE}' was found and is valid JSON."
+        except Exception as e:
+            players_content = f"ERROR: File '{PLAYERS_FILE}' was found but could not be read as JSON. Error: {str(e)}"
+    else:
+        players_content = f"ERROR: File '{PLAYERS_FILE}' was NOT found in the directory."
+
+    # Prepare the debug info
+    debug_info = {
+        "MESSAGE": "This is the debug page for your DCL Auction App.",
+        "CURRENT_WORKING_DIRECTORY": cwd,
+        "FILES_IN_DIRECTORY": sorted(dir_contents),
+        "DOES_PLAYERS_JSON_EXIST": players_file_exists,
+        "PLAYERS_JSON_READ_STATUS": players_content,
+        "CURRENT_AUCTION_STATE": auction_state,
+    }
+    return jsonify(debug_info)
+# ===============================================================
 if __name__ == '__main__':
     from waitress import serve
     load_state()
