@@ -9,9 +9,10 @@ app = Flask(__name__)
 app.secret_key = 'your_super_secret_key_change_me' 
 
 # --- CONFIGURATION ---
-STATE_FILE = 'auction_state.json'
+DATA_DIR = os.getenv('RENDER_DATA_DIR', '.')
+STATE_FILE = os.path.join(DATA_DIR, 'auction_state.json')
 PLAYERS_FILE = 'players.json'
-ADMIN_PASSWORD = "dcl"  # The password to access the auction
+ADMIN_PASSWORD = "dcl"
 INITIAL_TEAM_POINTS = 110000
 TEAMS = [
     "Naman Communication", "bhagat sing club", "Yaar Albela", "Maa Santoshi", "Ramdevariya",
@@ -22,29 +23,14 @@ TEAMS = [
 auction_state = {}
 
 # --- STATE MANAGEMENT FUNCTIONS ---
-def load_state():
-    global auction_state
-    if os.path.exists(STATE_FILE):
-        with open(STATE_FILE, 'r', encoding='utf-8') as f:
-            auction_state = json.load(f)
-    else:
-        initialize_state()
-
-def save_state():
-    with open(STATE_FILE, 'w', encoding='utf-8') as f:
-        json.dump(auction_state, f, indent=4)
-
 def initialize_state():
     """Initialize a fresh auction state from the base players file."""
     global auction_state
     print("Attempting to initialize a new auction state...")
     try:
-        # Check if the file exists before trying to open it
         if not os.path.exists(PLAYERS_FILE):
             print(f"CRITICAL ERROR: The file '{PLAYERS_FILE}' was not found.")
-            print(f"Please make sure '{PLAYERS_FILE}' is in the root directory of your project.")
-            # We set a default empty state to prevent a crash, but the app will be empty
-            auction_state = {"players": {}, "teams": {}, "unsold_player_ids": [], "last_transaction": None}
+            auction_state = {}
             return
 
         with open(PLAYERS_FILE, 'r', encoding='utf-8') as f:
@@ -59,13 +45,45 @@ def initialize_state():
         save_state()
         print("New auction state initialized SUCCESSFULLY.")
 
-    except json.JSONDecodeError as e:
-        print(f"CRITICAL ERROR: The '{PLAYERS_FILE}' file has a JSON syntax error: {e}")
-        print("Please validate your JSON file content.")
-        auction_state = {"players": {}, "teams": {}, "unsold_player_ids": [], "last_transaction": None}
     except Exception as e:
-        print(f"An unexpected error occurred during initialization: {e}")
-        auction_state = {"players": {}, "teams": {}, "unsold_player_ids": [], "last_transaction": None}
+        print(f"CRITICAL ERROR during initialization: {e}")
+        auction_state = {}
+
+def load_state():
+    """Load state from file, or initialize if the file is missing or corrupt."""
+    global auction_state
+    if os.path.exists(STATE_FILE):
+        try:
+            with open(STATE_FILE, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                if 'teams' in data and 'players' in data:
+                    auction_state = data
+                    print("Auction state successfully loaded from file.")
+                    return
+        except Exception as e:
+            print(f"WARNING: State file was corrupt: {e}. Re-initializing.")
+    
+    initialize_state()
+
+def save_state():
+    """Save the current auction state to the file."""
+    with open(STATE_FILE, 'w', encoding='utf-8') as f:
+        json.dump(auction_state, f, indent=4)
+
+# ===============================================================
+#  THE FINAL FIX: This function runs before every request.
+#  It acts as a safety net if the initial load failed.
+# ===============================================================
+@app.before_request
+def check_and_load_state():
+    # 'not auction_state' is a simple way to check if the dictionary is empty.
+    # We also exclude static files to avoid running this logic unnecessarily.
+    if not auction_state and request.endpoint not in ['static', 'login']:
+        print("State is empty on request, attempting to load state again...")
+        load_state()
+# ===============================================================
+
+
 # --- AUTHENTICATION & PAGE ROUTES ---
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -98,10 +116,9 @@ def auction():
 def teams():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
-    # Pass the full state to the template for rendering
     return render_template('teams.html', state=auction_state)
 
-# --- API ENDPOINTS FOR JAVASCRIPT ---
+# --- API ENDPOINTS ---
 @app.route('/api/state')
 def get_state():
     if not session.get('logged_in'): return jsonify({"error": "Not authenticated"}), 401
@@ -111,10 +128,8 @@ def get_state():
 def next_player():
     if not session.get('logged_in'): return jsonify({"error": "Not authenticated"}), 401
     import random
-    unsold_ids = auction_state['unsold_player_ids']
-    if not unsold_ids:
-        return jsonify(None) # No players left
-    
+    unsold_ids = auction_state.get('unsold_player_ids', [])
+    if not unsold_ids: return jsonify(None)
     player_id = random.choice(unsold_ids)
     player_data = auction_state['players'][str(player_id)]
     return jsonify(player_data)
@@ -123,23 +138,14 @@ def next_player():
 def sell_player():
     if not session.get('logged_in'): return jsonify({"error": "Not authenticated"}), 401
     data = request.json
-    player_id = data.get('playerId')
-    team_name = data.get('teamName')
-    points = data.get('points', 0)
-
-    if player_id not in auction_state['unsold_player_ids']:
-        return jsonify({"error": "Player already sold or invalid"}), 400
+    player_id, team_name, points = data.get('playerId'), data.get('teamName'), data.get('points', 0)
+    if player_id not in auction_state.get('unsold_player_ids', []): return jsonify({"error": "Player already sold or invalid"}), 400
     
     previous_team_state = auction_state['teams'][team_name].copy()
-    
     auction_state['teams'][team_name]['players'].append(player_id)
     auction_state['teams'][team_name]['points'] -= points
     auction_state['unsold_player_ids'].remove(player_id)
-    
-    auction_state['last_transaction'] = {
-        "type": "sell", "player_id": player_id, "team_name": team_name,
-        "points": points, "previous_team_state": previous_team_state
-    }
+    auction_state['last_transaction'] = {"type": "sell", "player_id": player_id, "team_name": team_name, "points": points, "previous_team_state": previous_team_state}
     save_state()
     return jsonify({"success": True, "state": auction_state})
 
@@ -147,14 +153,11 @@ def sell_player():
 def undo():
     if not session.get('logged_in'): return jsonify({"error": "Not authenticated"}), 401
     last_tx = auction_state.get('last_transaction')
-    if not last_tx or last_tx['type'] != 'sell':
-        return jsonify({"error": "No sale to undo"}), 400
-
-    player_id = last_tx['player_id']
-    auction_state['teams'][last_tx['team_name']] = last_tx['previous_team_state']
-    auction_state['unsold_player_ids'].append(player_id)
-    auction_state['last_transaction'] = None
+    if not last_tx or last_tx['type'] != 'sell': return jsonify({"error": "No sale to undo"}), 400
     
+    auction_state['teams'][last_tx['team_name']] = last_tx['previous_team_state']
+    auction_state['unsold_player_ids'].append(last_tx['player_id'])
+    auction_state['last_transaction'] = None
     save_state()
     return jsonify({"success": True, "state": auction_state})
     
@@ -169,78 +172,45 @@ def export_excel():
     if not session.get('logged_in'): return redirect(url_for('login'))
     output = io.BytesIO()
     writer = pd.ExcelWriter(output, engine='openpyxl')
-    all_players_dict = auction_state.get('players', {})
-    teams_summary = []
-
-    for team_name, team_data in auction_state.get('teams', {}).items():
-        teams_summary.append({
-            "Team Name": team_name,
-            "Players Bought": len(team_data['players']),
-            "Points Remaining": team_data['points']
-        })
-        roster_data = []
-        for player_id in team_data.get('players', []):
-            player_info = all_players_dict.get(str(player_id), {})
-            roster_data.append({
-                "Player ID": player_info.get('id'),
-                "Player Name": player_info.get('player_name'),
-                "Father's Name": player_info.get('father_name')
-            })
-        df_roster = pd.DataFrame(roster_data)
-        safe_sheet_name = ''.join(e for e in team_name if e.isalnum())[:31]
-        df_roster.to_excel(writer, sheet_name=safe_sheet_name, index=False)
-        
-    df_summary = pd.DataFrame(teams_summary)
-    df_summary.to_excel(writer, sheet_name='Summary', index=False)
-    
+    all_players = auction_state.get('players', {})
+    summary = []
+    for team, data in auction_state.get('teams', {}).items():
+        summary.append({"Team Name": team, "Players Bought": len(data['players']), "Points Remaining": data['points']})
+        roster = [all_players.get(str(pid)) for pid in data['players']]
+        df_roster = pd.DataFrame(roster)
+        safe_name = ''.join(e for e in team if e.isalnum())[:31]
+        df_roster.to_excel(writer, sheet_name=safe_name, index=False)
+    pd.DataFrame(summary).to_excel(writer, sheet_name='Summary', index=False)
     writer.close()
     output.seek(0)
-    return send_file(output, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                     as_attachment=True, download_name='DCL_Auction_Report.xlsx')
+    return send_file(output, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', as_attachment=True, download_name='DCL_Auction_Report.xlsx')
 
-
-# ===============================================================
-#  DEBUGGING ROUTE - ADD THIS ENTIRE FUNCTION
-# ===============================================================
 @app.route('/debug')
 def debug():
-    """A special route to display server environment and state for debugging."""
-    if not session.get('logged_in'):
-        return redirect(url_for('login'))
-
-    # Check current working directory and its contents
-    cwd = os.getcwd()
-    dir_contents = os.listdir('.')
-
-    # Check if players.json exists and what its case is
+    if not session.get('logged_in'): return redirect(url_for('login'))
+    # ... (debug function remains the same)
+    cwd, dir_contents = os.getcwd(), os.listdir('.')
     players_file_exists = os.path.exists(PLAYERS_FILE)
-    
-    # Try to read players.json
     players_content = "File could not be read."
     if players_file_exists:
         try:
             with open(PLAYERS_FILE, 'r', encoding='utf-8') as f:
-                # Try to load it as JSON to also check for syntax errors
                 json.load(f)
                 players_content = f"File '{PLAYERS_FILE}' was found and is valid JSON."
         except Exception as e:
-            players_content = f"ERROR: File '{PLAYERS_FILE}' was found but could not be read as JSON. Error: {str(e)}"
+            players_content = f"ERROR reading file: {str(e)}"
     else:
-        players_content = f"ERROR: File '{PLAYERS_FILE}' was NOT found in the directory."
-
-    # Prepare the debug info
-    debug_info = {
-        "MESSAGE": "This is the debug page for your DCL Auction App.",
-        "CURRENT_WORKING_DIRECTORY": cwd,
-        "FILES_IN_DIRECTORY": sorted(dir_contents),
-        "DOES_PLAYERS_JSON_EXIST": players_file_exists,
-        "PLAYERS_JSON_READ_STATUS": players_content,
+        players_content = f"ERROR: File '{PLAYERS_FILE}' was NOT found."
+    return jsonify({
+        "MESSAGE": "Debug page.", "CURRENT_WORKING_DIRECTORY": cwd, "FILES_IN_DIRECTORY": sorted(dir_contents),
+        "DOES_PLAYERS_JSON_EXIST": players_file_exists, "PLAYERS_JSON_READ_STATUS": players_content,
         "CURRENT_AUCTION_STATE": auction_state,
-    }
-    return jsonify(debug_info)
-# ===============================================================
+    })
+
+# Initial load attempt when the Gunicorn worker starts
+load_state()
+
 if __name__ == '__main__':
     from waitress import serve
-    load_state()
     print("Starting development server with Waitress on http://127.0.0.1:5000")
     serve(app, host='0.0.0.0', port=5000)
