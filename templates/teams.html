@@ -13,12 +13,26 @@
                 <div class="team-roster">
                     {% if team_data.players %}
                         <ul>
-                        {% for player_id in team_data.players %}
-                            {% set player = state.players[player_id|string] %}
+                        {% for sale_info in team_data.players %}
+                            {# THE FIX: Look up the player, but handle cases where the player might not exist #}
+                            {% set player = state.players.get(sale_info.id|string) %}
+                            
+                            {# Only display the list item if the player was successfully found #}
+                            {% if player %}
                             <li>
-                                <span class="roster-player-name">{{ player.player_name }}</span>
-                                <span class="roster-player-id">ID: {{ player.id }}</span>
+                                <div class="roster-player-info">
+                                    <span class="roster-player-name">{{ player.player_name }}</span>
+                                    <span class="roster-player-points">Sold for: {{ "{:,}".format(sale_info.points) }} PTS</span>
+                                </div>
+                                <button class="edit-btn" 
+                                        data-player-id="{{ player.id }}"
+                                        data-player-name="{{ player.player_name }}"
+                                        data-team-name="{{ team_name }}"
+                                        data-current-points="{{ sale_info.points }}">
+                                    Edit
+                                </button>
                             </li>
+                            {% endif %}
                         {% endfor %}
                         </ul>
                     {% else %}
@@ -29,4 +43,70 @@
         {% endfor %}
     </div>
 </div>
+
+<div id="edit-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <h2>Edit Sale</h2>
+        <h3 id="edit-modal-player-name"></h3>
+        <form id="edit-form">
+            <input type="hidden" id="edit-player-id">
+            <input type="hidden" id="edit-team-name">
+            <label for="edit-points">New Sale Points</label>
+            <input type="number" id="edit-points" placeholder="Enter New Points" min="0" required>
+            <div class="modal-buttons">
+                <button type="submit" class="sold-btn">UPDATE SALE</button>
+                <button type="button" id="edit-modal-cancel-btn">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const editModal = document.getElementById('edit-modal');
+    const editForm = document.getElementById('edit-form');
+    const editModalPlayerName = document.getElementById('edit-modal-player-name');
+    const editPlayerIdInput = document.getElementById('edit-player-id');
+    const editTeamNameInput = document.getElementById('edit-team-name');
+    const editPointsInput = document.getElementById('edit-points');
+    const editModalCancelBtn = document.getElementById('edit-modal-cancel-btn');
+
+    document.querySelector('.teams-grid').addEventListener('click', (e) => {
+        if (e.target.classList.contains('edit-btn')) {
+            const button = e.target;
+            editModalPlayerName.textContent = button.dataset.playerName;
+            editPlayerIdInput.value = button.dataset.playerId;
+            editTeamNameInput.value = button.dataset.teamName;
+            editPointsInput.value = button.dataset.currentPoints;
+            editModal.classList.remove('hidden');
+        }
+    });
+
+    editModalCancelBtn.addEventListener('click', () => {
+        editModal.classList.add('hidden');
+    });
+
+    editForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const payload = {
+            playerId: parseInt(editPlayerIdInput.value, 10),
+            teamName: editTeamNameInput.value,
+            newPoints: parseInt(editPointsInput.value, 10)
+        };
+
+        const response = await fetch('/api/edit_sale', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+            alert('Sale updated successfully! The page will now reload.');
+            location.reload();
+        } else {
+            alert('Failed to update sale.');
+        }
+    });
+});
+</script>
 {% endblock %}

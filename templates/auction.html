@@ -1,22 +1,29 @@
 {% extends "layout.html" %}
 {% block title %}Auction Room{% endblock %}
 {% block content %}
-<div class="auction-layout">
-    <div class="auction-panel">
-        <div id="player-card">
-            </div>
+<div class="auction-layout-focused">
+    <div class="auction-panel-focused">
         
-        <div id="auction-controls" class="hidden">
-            <button id="next-btn">Next Player</button>
-            <div class="decision-buttons">
-                <button id="sold-btn">SELL PLAYER</button>
-                <button id="skip-btn">SKIP PLAYER</button>
+        <div class="auction-main-area">
+            <div id="player-card">
+                </div>
+            
+            <div id="auction-controls">
+                <div class="search-container">
+                    <input type="text" id="player-search" placeholder="Search Player by Name/ID...">
+                    <div id="search-results" class="search-results-container hidden"></div>
+                </div>
+                
+                <button id="next-btn">Next Random Player</button>
+                <div class="decision-buttons">
+                    <button id="sold-btn">SELL PLAYER</button>
+                    <button id="skip-btn">SKIP PLAYER</button>
+                </div>
+                <button id="undo-btn">Undo Last Sale</button>
             </div>
-            <button id="undo-btn">Undo Last Sale</button>
         </div>
+
     </div>
-    <div class="lists-panel" id="teams-dashboard" style="display: none;">
-        </div>
 </div>
 
 <div id="sell-modal" class="modal-overlay hidden">

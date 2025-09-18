@@ -1,11 +1,16 @@
-
-/* ====== DCL AUCTION - FINAL VERSION (Corrected) ====== */
+/* ====== DCL AUCTION - FINAL POLISHED DESIGN ====== */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
 :root {
-    --bg-dark: #111827; --bg-slate: #1F2937; --text-light: #F9FAFB; --text-muted: #9CA3AF;
-    --accent-amber: #F59E0B; --accent-amber-dark: #D97706; --sold-green: #10B981;
-    --unsold-red: #EF4444; --ui-border: rgba(249, 250, 251, 0.1);
+    --bg-dark: #111827; 
+    --bg-slate: #1F2937; 
+    --text-light: #F9FAFB; 
+    --text-muted: #9CA3AF;
+    --accent-amber: #F59E0B; 
+    --accent-amber-dark: #D97706; 
+    --sold-green: #10B981;
+    --unsold-red: #EF4444; 
+    --ui-border: rgba(249, 250, 251, 0.1);
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'Poppins', sans-serif; background-color: var(--bg-dark); color: var(--text-light); }
@@ -32,20 +37,31 @@ body { font-family: 'Poppins', sans-serif; background-color: var(--bg-dark); col
 .reset-btn { background-color: var(--unsold-red); }
 
 /* --- Auction Page --- */
-.auction-layout { display: flex; height: 100%; padding: 20px; gap: 20px; overflow: hidden; }
-/* MODIFIED: This is the key change. It arranges the player card and controls side-by-side */
-.auction-panel {
-    flex: 2;
+.auction-layout-focused { display: flex; justify-content: center; align-items: flex-start; height: 100%; padding: 20px; overflow-y: auto; }
+.auction-panel-focused { width: 100%; max-width: 1200px; display: flex; flex-direction: column; gap: 20px; }
+
+/* NEW: This is the main side-by-side container */
+.auction-main-area {
     display: flex;
     flex-direction: row;
-    align-items: center;
     gap: 20px;
+    align-items: stretch; /* Make card and controls equal height */
 }
-.lists-panel { flex: 1; background: rgba(31, 41, 55, 0.5); backdrop-filter: blur(10px); border: 1px solid var(--ui-border); border-radius: 10px; padding: 20px; overflow-y: auto; }
-#player-card { flex-grow: 1; background: rgba(31, 41, 55, 0.5); backdrop-filter: blur(10px); border: 1px solid var(--ui-border); border-radius: 15px; padding: 30px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; min-height: 600px; /* Ensures card has height */ }
+
+#player-card { 
+    flex-grow: 1; 
+    background: linear-gradient(145deg, var(--bg-slate), var(--bg-dark));
+    border: 1px solid var(--ui-border); 
+    border-radius: 15px; 
+    padding: 30px; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0,0,0,0.4), inset 0 0 15px rgba(245, 158, 11, 0.1);
+}
 .welcome-screen h1 { font-size: 3rem; color: var(--accent-amber); }
-#start-auction-btn { margin-top: 20px; padding: 20px 40px; font-size: 1.5rem; font-weight: 700; border-radius: 8px; cursor: pointer; background-color: var(--sold-green); color: white; border: none; }
-/* FIXED: Corrected invalid 'display' property to 'width' and suggested a border-radius */
 .player-photo {
     width: 300px;
     height: 400px;
@@ -60,34 +76,24 @@ body { font-family: 'Poppins', sans-serif; background-color: var(--bg-dark); col
 #father-name { font-size: 1.3rem; color: var(--text-muted); }
 #player-id { margin-top: 15px; background: var(--accent-amber); color: var(--bg-dark); padding: 5px 15px; border-radius: 20px; font-weight: 700; }
 
-/* MODIFIED: Styles for the vertical button panel on the side */
 #auction-controls {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    width: 200px;
-    flex-shrink: 0; /* Prevents this column from shrinking */
+    width: 300px; /* Width of the side panel */
+    flex-shrink: 0;
+    background: rgba(31, 41, 55, 0.5);
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid var(--ui-border);
 }
 #auction-controls button { padding: 15px; font-size: 1.2rem; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; transition: all 0.2s ease-in-out; text-transform: uppercase; }
-#auction-controls button:disabled { background-color: #374151; color: #6B7280; cursor: not-allowed; }
-/* MODIFIED: Stack sold/skip buttons in the new narrow side panel */
-.decision-buttons {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 15px;
-}
-/* FIXED: Removed invalid characters */
-#next-btn {
-    background-color: var(--accent-amber);
-    color: var(--bg-dark);
-    display: none;
-}
+#auction-controls button:disabled { background-color: #374151; color: #6B7280; cursor: not-allowed; transform: none; }
+.decision-buttons { display: grid; grid-template-columns: 1fr; gap: 15px; }
+#next-btn { background-color: var(--accent-amber); color: var(--bg-dark); }
 .sold-btn { background-color: var(--sold-green); color: white; }
 #skip-btn { background-color: #4B5563; color: white; }
 #undo-btn { background-color: #6c757d; color: white; }
-.team-dashboard-item { display: flex; justify-content: space-between; align-items: center; background: rgba(17, 24, 39, 0.5); padding: 12px 15px; border-radius: 5px; margin-bottom: 8px; border-left: 4px solid var(--accent-amber); }
-.team-dashboard-item .team-name { font-weight: 600; }
-.team-dashboard-item .team-points { font-weight: 700; color: var(--sold-green); }
 
 /* --- Teams Page --- */
 .teams-page-container { padding: 30px; height: 100%; overflow-y: auto; }
@@ -112,38 +118,23 @@ body { font-family: 'Poppins', sans-serif; background-color: var(--bg-dark); col
 .modal-buttons button { flex-grow: 1; padding: 12px; font-size: 1rem; font-weight: 600; border: none; border-radius: 5px; cursor: pointer; }
 #modal-cancel-btn { background-color: #4B5563; color: white; }
 
-/* ADDED: Styles for the non-blocking notifications */
-/* --- Toast Notification --- */
-.toast {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 12px 25px;
-    border-radius: 8px;
-    color: white;
-    font-weight: 600;
-    z-index: 2000;
-    opacity: 0;
-    transition: opacity 0.3s, bottom 0.3s;
-    pointer-events: none;
-}
-.toast.show {
-    opacity: 1;
-    bottom: 30px;
-}
-.toast.success { background-color: var(--sold-green); }
-.toast.error { background-color: var(--unsold-red); }
+/* --- New Styles for Search & Edit --- */
+.search-container { position: relative; }
+#player-search { width: 100%; padding: 12px; font-size: 1rem; border-radius: 5px; border: 1px solid var(--ui-border); background: rgba(17, 24, 39, 0.5); color: var(--text-light); }
+.search-results-container { position: absolute; width: 100%; background-color: var(--bg-slate); border: 1px solid var(--ui-border); border-top: none; border-radius: 0 0 5px 5px; max-height: 200px; overflow-y: auto; z-index: 100; }
+.search-result-item { padding: 10px; cursor: pointer; border-bottom: 1px solid var(--ui-border); }
+.search-result-item:last-child { border-bottom: none; }
+.search-result-item:hover { background-color: var(--bg-dark); }
+.roster-player-info { display: flex; flex-direction: column; }
+.roster-player-points { font-size: 0.8rem; color: var(--text-muted); }
+.edit-btn { background-color: var(--accent-amber); color: var(--bg-dark); border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 600; transition: background-color 0.2s; }
+.edit-btn:hover { background-color: var(--accent-amber-dark); }
+#edit-form label { display: block; margin-bottom: 5px; font-weight: 600; text-align: left; }
 
 /* --- Responsive --- */
-@media (max-width: 768px) {
-    .main-content { height: calc(100vh - 55px); }
-    .navbar { height: 55px; padding: 0 10px; }
-    .nav-title { font-size: 1.2rem; }
-    .nav-links { display: none; }
-    .auction-layout { flex-direction: column; }
-    /* ADDED: Stack player card and controls vertically on small screens */
-    .auction-panel { flex-direction: column; }
+@media (max-width: 900px) {
+    .main-content { height: auto; }
+    .auction-main-area { flex-direction: column; } /* Stack card and controls on mobile */
+    #auction-controls { width: 100%; }
     #player-name { font-size: 2rem; }
-    .decision-buttons { grid-template-columns: 1fr; }
 }
