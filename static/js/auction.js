@@ -20,6 +20,22 @@ document.addEventListener('DOMContentLoaded', () => {
         modalCancelBtn: document.getElementById('modal-cancel-btn'),
     };
 
+    // --- HELPER FUNCTIONS ---
+    function showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        // Add a class to make it visible and start the transition
+        setTimeout(() => toast.classList.add('show'), 10);
+        // Set a timer to remove the toast
+        setTimeout(() => {
+            toast.classList.remove('show');
+            // Remove the element from the DOM after the transition is complete
+            toast.addEventListener('transitionend', () => toast.remove());
+        }, 3000);
+    }
+
     // --- API FUNCTIONS ---
     async function apiCall(endpoint, method = 'GET', body = null) {
         const options = { method, headers: { 'Content-Type': 'application/json' } };
@@ -33,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return response.json();
         } catch (error) {
             console.error(`Error with ${method} ${endpoint}:`, error);
-            alert(`An error occurred: ${error.message}`);
+            showToast(error.message, 'error'); // Use toast for errors
             return null;
         }
     }
@@ -63,8 +79,8 @@ document.addEventListener('DOMContentLoaded', () => {
         ui.playerCard.innerHTML = `
             <div class="welcome-screen">
                 <h1>Welcome, Auctioneer</h1>
-                <p>${unsoldCount > 0 ? `${unsoldCount} players are ready.` : 'All players have been sold!'}</p>
-                <button id="start-auction-btn">Begin Auction</button>
+                <p>${unsoldCount > 0 ? `${unsoldCount} players are remaining.` : 'All players have been sold!'}</p>
+                <button id="start-auction-btn">Next Player</button>
             </div>`;
         document.getElementById('start-auction-btn').addEventListener('click', () => {
             ui.auctionControls.classList.remove('hidden');
@@ -77,13 +93,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentPlayer) {
             const photoPath = currentPlayer.photo && currentPlayer.photo.trim() ? `/${currentPlayer.photo}` : null;
             const initial = currentPlayer.player_name ? currentPlayer.player_name.charAt(0).toUpperCase() : '?';
-            const iconHTML = photoPath
+            
+            // This version creates a placeholder with the initial if no photo exists
+            const imageHTML = photoPath
                 ? `<img src="${photoPath}" alt="${currentPlayer.player_name}" class="player-photo">`
-                : `<div class="player-icon">${initial}</div>`;
+                : `<div class="player-photo" style="display: flex; align-items: center; justify-content: center; font-size: 150px;">${initial}</div>`;
 
             ui.playerCard.innerHTML = `
-                ${iconHTML}
-                <h2 id="player-name">${currentPlayer.player_name}</h2>
+                ${imageHTML}
+                <h1 id="player-name">${currentPlayer.player_name}</h1>
                 <p id="father-name">S/O: ${currentPlayer.father_name}</p>
                 <span id="player-id">ID: ${currentPlayer.id}</span>`;
         } else {
@@ -94,7 +112,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateButtonStates() {
         ui.soldBtn.disabled = !currentPlayer;
         ui.skipBtn.disabled = !currentPlayer;
-        ui.nextBtn.disabled = !!currentPlayer;
+        // The 'next' button is on the welcome screen, this logic can be simplified or removed
+        // if #next-btn is only used there. For now, it's harmless.
+        ui.nextBtn.disabled = !!currentPlayer; 
         ui.undoBtn.disabled = !state.last_transaction;
     }
 
@@ -130,16 +150,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const points = parseInt(ui.sellPointsInput.value, 10);
         const teamName = ui.sellTeamSelect.value;
         if (points < 0 || !teamName) {
-            alert("Please enter a valid point value and select a team."); return;
+            showToast("Please enter valid points and select a team.", 'error'); return;
         }
 
         const team = state.teams[teamName];
         if (points > team.points) {
-            alert(`${teamName} does not have enough points!`); return;
+            showToast(`${teamName} does not have enough points!`, 'error'); return;
         }
 
         const response = await apiCall('/api/sell', 'POST', { playerId: currentPlayer.id, teamName, points });
         if (response) {
+            showToast(`Player sold to ${teamName} for ${points} points!`);
             currentPlayer = null;
             ui.sellModal.classList.add('hidden');
             ui.sellForm.reset();
@@ -150,6 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function handleUndo() {
         const response = await apiCall('/api/undo', 'POST');
         if (response) {
+            showToast('Last transaction has been undone.', 'success');
             currentPlayer = null;
             render(response.state);
         }

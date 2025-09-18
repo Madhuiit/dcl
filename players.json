@@ -3,13 +3,13 @@
         "id": 1,
         "player_name": "AASHISH PAREEK",
         "father_name": "RAMAVTAR PAREEK",
-        "photo": "static/images/Hansraj_1.jpg"
+        "photo": "static/images/M.S.Mister.JPG"
     },
     {
         "id": 2,
         "player_name": "ABHISHEK PAREEK ",
         "father_name": "DWARKA PRASAD PAREEK ",
-        "photo": "static/images/JAYSAINI.jpg"
+        "photo": "static/images/hishekPareek(1).jpg"
     },
     {
         "id": 3,
@@ -27,7 +27,7 @@
         "id": 5,
         "player_name": "ADITYA PAREEK",
         "father_name": "BAJRANG LAL PAREEK",
-        "photo": "static/images/KisanRamji_1.jpg"
+        "photo": "static/images/iPareek(1).jpeg"
     },
     {
         "id": 6,
@@ -39,7 +39,7 @@
         "id": 7,
         "player_name": "AJAY PAREEK",
         "father_name": " SHREE OMPRAKASH PANDIA",
-        "photo": "static/images/KrishnaGopal.jpg"
+        "photo": "static/images/jaypareek_1.jpg"
     },
     {
         "id": 8,
@@ -49,7 +49,7 @@
     },
     {
         "id": 9,
-        "player_name": "AMIT PANDIA",
+        "player_name": "AMIT PANDIA (Ram)",
         "father_name": "SHIVRATAN PANDIA",
         "photo": "static/images/KuldeepUgani_1.jpeg"
     },
@@ -57,55 +57,55 @@
         "id": 10,
         "player_name": "ANAND UNCHAWA ",
         "father_name": "SANWARMAL PAREEK",
-        "photo": "static/images/M.S.Mister.JPG"
+        "photo": "static/images/nandPareek_2.jpg"
     },
     {
         "id": 11,
         "player_name": "ANAND VYAS",
         "father_name": "PURAN MAL VYAS",
-        "photo": "static/images/MANOJKUMAR_11.jpg"
+        "photo":   "static/images/nandVays.jpg"
     },
     {
         "id": 12,
         "player_name": "ANIL ",
         "father_name": "CHANDRA PRAKASH SAINI ",
-        "photo": "static/images/MANOJKUMAR_2.jpg"
+        "photo": "static/images/nilSaini.jpg"
     },
     {
         "id": 13,
-        "player_name": "ANJANI UGANI",
+        "player_name": "ANJANI UGANI",  
         "father_name": "PAWAN",
-        "photo": "static/images/MANOJKUMAR_20.jpg"
+        "photo": "static/images/AnjaniUgani.jpg"
     },
     {
         "id": 14,
         "player_name": "ANKIT PAREEK",
         "father_name": "PRAKASH CHANDRA PAREEK",
-        "photo": "static/images/MANOJKUMAR_7.jpg"
+        "photo": "static/images/nkitPareek.jpg"
     },
     {
         "id": 15,
         "player_name": "ANKIT SAINI",
         "father_name": "JAGDISH PRASAD SAINI ",
-        "photo": "static/images/MANOJSANDELA.jpg"
+        "photo": "static/images/nkitSaini.jpeg"
     },
     {
         "id": 16,
         "player_name": "ANKU PAREEK",
         "father_name": "RAMAVTAR PAREEK",
-        "photo": "static/images/MaNoJNaYaK.jpg"
+        "photo": null
     },
     {
         "id": 17,
         "player_name": "ANUJ BOHARA ",
         "father_name": "OM PRAKASH BOHARA ",
-        "photo": "static/images/MadhuPareek.jpeg"
+        "photo": "static/images/nujBohara.jpg"
     },
     {
         "id": 18,
         "player_name": "ANURAG PAREEK",
         "father_name": "BAJRANG LAL PAREEK",
-        "photo": "static/images/Madhuugani.jpeg"
+        "photo": "static/images/nuragPareek.jpeg"
     },
     {
         "id": 19,
@@ -117,7 +117,7 @@
         "id": 20,
         "player_name": "ASHOK KUMAR ",
         "father_name": "DURGA PRASAD PANDIA",
-        "photo": "static/images/ManishSaini_1.jpg"
+        "photo":    "static/images/ManishSaini_1.jpg"
     },
     {
         "id": 21,
@@ -129,7 +129,7 @@
         "id": 22,
         "player_name": "BABLU",
         "father_name": "CHAMPA LAL PANDIA ",
-        "photo": "static/images/MohitUgani_1.jpeg"
+        "photo": "static/images/ulalaSerpanch.jpg"
     },
     {
         "id": 23,
@@ -183,7 +183,7 @@
         "id": 31,
         "player_name": "BHAWANI PAREEK",
         "father_name": "RADHAKRISHAN UGANI",
-        "photo": "static/images/PankajPareek.jpg"
+        "photo": "static/images/bhawanibhagoti.jpg"
     },
     {
         "id": 32,
@@ -201,7 +201,7 @@
         "id": 34,
         "player_name": "DEEPAK SAINI",
         "father_name": "RAMDEV SAINI",
-        "photo": "static/images/ParkashRamji_1.jpg"
+        "photo": "static/images/pakSaini.jpg"
     },
     {
         "id": 35,
@@ -213,19 +213,19 @@
         "id": 36,
         "player_name": "DHEERAJ KUMAR PANDIA",
         "father_name": "RAJENDAR PRASAD PANDIA",
-        "photo": "static/images/Pawan_1.jpg"
+        "photo": "static/images/heerajPareek.jpeg"
     },
     {
         "id": 37,
         "player_name": "DHIRAJ ",
         "father_name": "TOLARAM",
-        "photo": "static/images/PiyushPareek.jpg"
+        "photo":   "static/images/hirajUgani.jpg"
     },
     {
         "id": 38,
         "player_name": "DINESH CHAVARIYA",
         "father_name": "MANOHAR LAL ",
-        "photo": "static/images/RahulPareek.jpg"
+        "photo":  "static/images/ineshNayak.jpg"
     },
     {
         "id": 39,
@@ -249,7 +249,7 @@
         "id": 42,
         "player_name": "GANESH(JECKY)",
         "father_name": "RAMDEV TIWARI ",
-        "photo": "static/images/RamanandBohara.jpeg"
+        "photo": "static/images/ganeshtiwari.jpg"
     },
     {
         "id": 43,
@@ -309,7 +309,7 @@
         "id": 52,
         "player_name": "KALICHARAN PAREEK",
         "father_name": "TEJARAM PAREEK",
-        "photo": "static/images/ShankarSaini.png"
+        "photo": "static/images/kalicharanpareek.jpeg"
     },
     {
         "id": 53,
@@ -321,7 +321,7 @@
         "id": 54,
         "player_name": "KANA UGANI ",
         "father_name": "MADAN PAREEK ",
-        "photo": "static/images/ShankarSaini_2.jpg"
+        "photo": "static/images/khanaylalUgani_1.jpg"
     },
     {
         "id": 55,
@@ -333,11 +333,11 @@
         "id": 56,
         "player_name": "KAPIL PAREEK",
         "father_name": "BAJRANG LAL",
-        "photo": "static/images/ShankarSaini_4.jpg"
+        "photo": "static/images/KapilPareek.jpg"
     },
     {
         "id": 57,
-        "player_name": "KARAN LAREEK",
+        "player_name": "KARAN PAREEK",
         "father_name": "PAWAN PAREEK ",
         "photo": "static/images/ShankarSaini_5.jpg"
     },
@@ -345,13 +345,13 @@
         "id": 58,
         "player_name": "KARTIK PAREEK ",
         "father_name": "PRADEEP KUMAR ",
-        "photo": "static/images/ShankarSaini_6.jpg"
+        "photo":"static/images/KartikPareek.jpg"
     },
     {
         "id": 59,
         "player_name": "KISHAN PAREEK",
         "father_name": "OM PRAKASH PAREEK",
-        "photo": "static/images/ShiSHPareek.jpg"
+        "photo": "static/images/KisanRamji_1.jpg"
     },
     {
         "id": 60,
@@ -375,13 +375,13 @@
         "id": 63,
         "player_name": "KRISHNA GOPAL PAREEK",
         "father_name": "DURGA PRASAD PAREEK",
-        "photo": "static/images/ShyamSandeep.jpg"
+        "photo":  "static/images/KrishnaGopal.jpg"
     },
     {
         "id": 64,
         "player_name": "KULDEEP PAREEK",
         "father_name": "JAGDISH PRASAD PAREEK",
-        "photo": "static/images/SivRamji_1.jpg"
+        "photo": "static/images/KuldeepUgani_1.jpeg"
     },
     {
         "id": 65,
@@ -399,7 +399,7 @@
         "id": 67,
         "player_name": "LALIT PAREEK",
         "father_name": "PAWAN PAREEK",
-        "photo": "static/images/ganeshtiwari.jpg"
+        "photo": " static/images/lalitpandit.jpg"
     },
     {
         "id": 68,
@@ -411,25 +411,25 @@
         "id": 69,
         "player_name": "MADHU UGANI",
         "father_name": "RAJU UGANI",
-        "photo": "static/images/govindpareek.jpeg"
+        "photo": "static/images/Madhuugani.jpeg"
     },
     {
         "id": 70,
         "player_name": "MADHUSUDAN PAREEK ",
         "father_name": "SITARAM PAREEK ",
-        "photo": "static/images/hawanibhagoti.jpg"
+        "photo": "static/images/bhawanibhagoti.jpg"
     },
     {
         "id": 71,
         "player_name": "MADHUSUDAN TIWARI ",
         "father_name": "SITARAM TIWARI ",
-        "photo": "static/images/heerajPareek.jpeg"
+        "photo": "static/images/MadhuPareek.jpeg"
     },
     {
         "id": 72,
         "player_name": "MAHAVEER BOHARA",
         "father_name": "DULICHAND BOHARA",
-        "photo": "static/images/hirajUgani.jpg"
+        "photo":  "static/images/manojbohara.jpg"
     },
     {
         "id": 73,
@@ -447,7 +447,7 @@
         "id": 75,
         "player_name": "MANISH SAINI ",
         "father_name": "GAJANAND SAINI",
-        "photo": "static/images/ineshNayak.jpg"
+        "photo": "static/images/ManishSaini_1.jpg"
     },
     {
         "id": 76,
@@ -459,7 +459,7 @@
         "id": 77,
         "player_name": "MANOJ KUMAR ",
         "father_name": "MAHAVEER PRASAD PANDIA ",
-        "photo": "static/images/kalicharanpareek.jpeg"
+        "photo":  "static/images/MANOJKUMAR_11.jpg" 
     },
     {
         "id": 78,
@@ -471,19 +471,19 @@
         "id": 79,
         "player_name": "MANOJ SANDELA",
         "father_name": "TUGNA RAM SANDELA",
-        "photo": "static/images/khanaylalUgani_1.jpg"
+        "photo": "static/images/MANOJSANDELA.jpg"
     },
     {
         "id": 80,
         "player_name": "MESHU",
         "father_name": "MAHAVEER SAINI ",
-        "photo": "static/images/krishanKumarsaini.jpg"
+        "photo": "static/images/vasuPareek.jpeg"
     },
     {
         "id": 81,
         "player_name": "MILAN SAINI ",
         "father_name": "BALDEV SINGH SAINI ",
-        "photo": "static/images/lalitpandit.jpg"
+        "photo": " static/images/ShankarSaini_2.jpg"
     },
     {
         "id": 82,
@@ -495,13 +495,13 @@
         "id": 83,
         "player_name": "MOHIT PAREEK",
         "father_name": "INDRACHAND PAREEK",
-        "photo": "static/images/manojbohara_1.jpg"
+        "photo": "static/images/MohitUgani_1.jpeg"
     },
     {
         "id": 84,
         "player_name": "MOHIT PAREEK",
         "father_name": "MAHAVEER PAREEK",
-        "photo": "static/images/nandBohara.jpg"
+        "photo": "static/images/MohitGuad_1.jpg"
     },
     {
         "id": 85,
@@ -519,7 +519,7 @@
         "id": 87,
         "player_name": "MUKESH JOSHI ",
         "father_name": "MANGILAL JOSHI ",
-        "photo": "static/images/nandPareek_2.jpg"
+        "photo": "static/images/sachinjoshi_1.jpg"
     },
     {
         "id": 88,
@@ -549,13 +549,13 @@
         "id": 92,
         "player_name": "MUKESH TIWARI ",
         "father_name": "BUDHMAL TIWARI ",
-        "photo": "static/images/nilSaini.jpg"
+        "photo": "static/images/MukeshTiwari_1.jpg"
     },
     {
         "id": 93,
         "player_name": "NANDRAM SAINI",
         "father_name": "MUCHAND SAINI",
-        "photo": "static/images/nkitPareek.jpg"
+        "photo": "static/images/NandramSaini.jpg"
     },
     {
         "id": 94,
@@ -573,13 +573,13 @@
         "id": 96,
         "player_name": "NAVEEN ",
         "father_name": "RATAN LAL PANDIA ",
-        "photo": "static/images/nujBohara.jpg"
+        "photo": "static/images/NaveenRamji_1.jpg"
     },
     {
         "id": 97,
         "player_name": "NAVEEN PAREEK",
         "father_name": "PRADEEP KUMAR PAREEK",
-        "photo": "static/images/nuragPareek.jpeg"
+        "photo": "static/images/NaveenPareek_2.jpeg"
     },
     {
         "id": 98,
@@ -591,7 +591,7 @@
         "id": 99,
         "player_name": "NIKHIL PANDIYA ",
         "father_name": "AMRIT LAL",
-        "photo": "static/images/pakSaini.jpg"
+        "photo": "static/images/KisanRamji_1.jpg"
     },
     {
         "id": 100,
@@ -603,7 +603,7 @@
         "id": 101,
         "player_name": "NISHANT ",
         "father_name": "SITARAM TIWARI",
-        "photo": "static/images/pankajpulasria_2.jpg"
+        "photo": "static/images/NishantTiwari.jpg"
     },
     {
         "id": 102,
@@ -627,7 +627,7 @@
         "id": 105,
         "player_name": "PANKAJ PAREEK",
         "father_name": "DURGA PRASAD PAREEK",
-        "photo": "static/images/ravikantpareek(1).jpg"
+        "photo": "static/images/PankajPareek_2.jpg"
     },
     {
         "id": 106,
@@ -651,7 +651,7 @@
         "id": 109,
         "player_name": "PAWAN DRIVER ",
         "father_name": "BHAGWANARAM PANDIA",
-        "photo": "static/images/shokKumar.jpg"
+        "photo": "static/images/pawanDriver_1.jpg"
     },
     {
         "id": 110,
@@ -669,7 +669,7 @@
         "id": 112,
         "player_name": "PAWAN PANDIA",
         "father_name": "RADHE SHYAM PANDIA",
-        "photo": "static/images/shyampareek.JPG"
+        "photo": "static/images/PawanPandia.jpeg"
     },
     {
         "id": 113,
@@ -693,7 +693,7 @@
         "id": 116,
         "player_name": "PIYUSH PAREEK ",
         "father_name": "DWARKA PRASAD PAREEK ",
-        "photo": "static/images/ulalaSerpanch.jpg"
+        "photo": "static/images/PiyushPareek.jpg"
     },
     {
         "id": 117,
@@ -711,7 +711,7 @@
         "id": 119,
         "player_name": "PRAKASH RAMJEE",
         "father_name": "BHANWAR LAL PANDIA ",
-        "photo": null
+        "photo": "static/images/ParkashRamji_1.jpg"
     },
     {
         "id": 120,
@@ -753,13 +753,13 @@
         "id": 126,
         "player_name": "RAHUL PANDIA",
         "father_name": "MAHAVEER PRASAD PAREEK",
-        "photo": null
+        "photo": "static/images/RahulPareek.jpg"
     },
     {
         "id": 127,
         "player_name": "RAHUL SAINI",
         "father_name": "PARMESHWAR SAINI",
-        "photo": null
+        "photo": "static/images/rahulsaini.jpg"
     },
     {
         "id": 128,
@@ -771,13 +771,13 @@
         "id": 129,
         "player_name": "RAJAT SAINI",
         "father_name": "RATAN LAL SAINI",
-        "photo": null
+        "photo": "static/images/Rajat_1.jpg"
     },
     {
         "id": 130,
         "player_name": "RAJESH KUMAR ",
         "father_name": "BRIJ LAL ",
-        "photo": null
+        "photo": "static/images/RajeshUgani_1.jpg"
     },
     {
         "id": 131,
@@ -789,7 +789,7 @@
         "id": 132,
         "player_name": "RAKESH SANDELA",
         "father_name": "MANGAL CHAND ",
-        "photo": null
+        "photo": "static/images/RakeshSandela.jpg"
     },
     {
         "id": 133,
@@ -801,13 +801,13 @@
         "id": 134,
         "player_name": "RAMAN PAREEK",
         "father_name": "SHYAM PAREEK ",
-        "photo": null
+        "photo": "static/images/RamanandBohara.jpeg"
     },
     {
         "id": 135,
         "player_name": "RAMESH CHAWARIYA",
         "father_name": "BRAHMANAND CHAWARIYA",
-        "photo": null
+        "photo": "static/images/RameshChanvariya_1.jpg"
     },
     {
         "id": 136,
@@ -825,7 +825,7 @@
         "id": 138,
         "player_name": "RAMSWROOP PAREEK ",
         "father_name": "KAMAL KUMAR PAREEK ",
-        "photo": null
+        "photo": "static/images/RamswroopPareek.jpg"
     },
     {
         "id": 139,
@@ -843,7 +843,7 @@
         "id": 141,
         "player_name": "RAVIKANT PAREEK ",
         "father_name": "GOVIND PAREEK ",
-        "photo": null
+        "photo": "static/images/ravikantpareek(1).jpg"
     },
     {
         "id": 142,
@@ -873,13 +873,13 @@
         "id": 146,
         "player_name": "ROHIT PAREEK",
         "father_name": "BARMANAND PAREEK ",
-        "photo": null
+        "photo":"static/images/Rohit_gausala_1.jpg"
     },
     {
         "id": 147,
         "player_name": "ROHIT PAREEK ",
         "father_name": "MANOJ KUMAR PAREEK ",
-        "photo": null
+        "photo": "static/images/Rohit_gausala_1.jpg"
     },
     {
         "id": 148,
@@ -891,7 +891,7 @@
         "id": 149,
         "player_name": "SACHIN JOSHI ",
         "father_name": "MANGILAL JOSHI ",
-        "photo": null
+        "photo": "static/images/sachinjoshi_1.jpg"
     },
     {
         "id": 150,
@@ -909,19 +909,19 @@
         "id": 152,
         "player_name": "SANDEEP PAREEK",
         "father_name": "BHANWAR LAL PANDIYA",
-        "photo": null
+        "photo": "static/images/nkitPareek.jpg"
     },
     {
         "id": 153,
         "player_name": "SANJAY PANDIYA ",
         "father_name": "AMBIKA LAL ",
-        "photo": null
+        "photo": "static/images/Sanjaypandiya.png"
     },
     {
         "id": 154,
         "player_name": "SANTOSH BOHARA ",
         "father_name": "RUKMANAND BOHARA",
-        "photo": null
+        "photo": "static/images/SanjuBhohra_1.jpg"
     },
     {
         "id": 155,
@@ -933,7 +933,7 @@
         "id": 156,
         "player_name": "SHEKHAR SAINI ",
         "father_name": "BANSHIDHAR SAINI ",
-        "photo": null
+        "photo": "static/images/ShankarSaini.jpg"
     },
     {
         "id": 157,
@@ -951,7 +951,7 @@
         "id": 159,
         "player_name": "SHIVA UGANI",
         "father_name": "BALBHADRA PANDIA ",
-        "photo": null
+        "photo": "static/images/Shivugani7734.jpg"
     },
     {
         "id": 160,
@@ -963,19 +963,20 @@
         "id": 161,
         "player_name": "SHIVAM ",
         "father_name": "OM PRAKASH PAREEK ",
-        "photo": null
+        "photo": "static/images/ShivamPareek.jpg"
+       
     },
     {
         "id": 162,
         "player_name": "SHIVRATAN",
         "father_name": "HARLAL UGANI",
-        "photo": null
+        "photo": "static/images/Shivugani7734.jpg"
     },
     {
         "id": 163,
         "player_name": "SHIVRATAN BOHARA",
         "father_name": "MAHAVEER PRASAD BOHARA ",
-        "photo": null
+        "photo":  "static/images/Sivbhohara_1.jpg"
     },
     {
         "id": 164,
@@ -987,13 +988,13 @@
         "id": 165,
         "player_name": "SHYAM PAREEK",
         "father_name": "BHANWAR LAL PANDIYA",
-        "photo": null
+        "photo": "static/images/ShyamSandeep.jpg"
     },
     {
         "id": 166,
         "player_name": "SHYAM PAREEK ",
         "father_name": "JAGAN PAREEK ",
-        "photo": null
+        "photo": "static/images/shyampareek.JPG"
     },
     {
         "id": 167,
@@ -1011,7 +1012,7 @@
         "id": 169,
         "player_name": "SUBHASH PANDIA",
         "father_name": "CHAMPALAL",
-        "photo": null
+        "photo": "static/images/subhashpandia_2.jpg"
     },
     {
         "id": 170,
@@ -1041,19 +1042,19 @@
         "id": 174,
         "player_name": "SUNIL SANDELA",
         "father_name": "HARIRAM SANDELA",
-        "photo": null
+        "photo": "static/images/MANOJKUMAR_7.jpg"
     },
     {
         "id": 175,
         "player_name": "SURESH TIWARI ",
         "father_name": "BUDHMAL TIWARI",
-        "photo": null
+        "photo": "static/images/SureshTiwari_1.jpg"
     },
     {
         "id": 176,
         "player_name": "SURESH UGANI",
         "father_name": "TARACHAND UGANI",
-        "photo": null
+        "photo": "static/images/ulalaSerpanch.jpg"
     },
     {
         "id": 177,
@@ -1107,7 +1108,7 @@
         "id": 185,
         "player_name": "VISHNU SANDELA",
         "father_name": "DURGA PARSAD SANDELA",
-        "photo": null
+        "photo": "static/images/KisanRamji_1.jpg"
     },
     {
         "id": 186,

@@ -208,9 +208,11 @@ def debug():
     })
 
 # Initial load attempt when the Gunicorn worker starts
-load_state()
+# load_state()
 
 if __name__ == '__main__':
     from waitress import serve
+    # We add load_state() here for local development ONLY
+    load_state() 
     print("Starting development server with Waitress on http://127.0.0.1:5000")
     serve(app, host='0.0.0.0', port=5000)
