@@ -93,7 +93,7 @@
         "id": 16,
         "player_name": "ANKU PAREEK",
         "father_name": "RAMAVTAR PAREEK",
-        "photo": null
+        "photo":  null
     },
     {
         "id": 17,
@@ -741,7 +741,7 @@
         "id": 124,
         "player_name": "RAGHAV PARASHAR ",
         "father_name": "ASHOK KUMAR PAREEK ",
-        "photo": " static/images/raghav.jpg"
+        "photo": "static/images/raghav.jpg"
     },
     {
         "id": 125,
