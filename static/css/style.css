@@ -18,7 +18,7 @@ body { font-family: 'Poppins', sans-serif; background-color: var(--bg-dark); col
 .main-content { height: calc(100vh - 65px); }
 
 /* --- Login Screen --- */
-#login-screen { display: flex; justify-content: center; align-items: center; height: 100vh; background: url('https://i.ibb.co/yYwH6V1/cricket-bg.jpg') no-repeat center center/cover; background-attachment: fixed; }
+#login-screen { display: flex; justify-content: center; align-items: center; height: 100vh; background: url('static/images/logo.png') no-repeat center center/cover; background-attachment: fixed; }
 .login-box { background: rgba(31, 41, 55, 0.8); backdrop-filter: blur(10px); padding: 40px; border-radius: 15px; text-align: center; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); border: 1px solid var(--ui-border); width: 400px; max-width: 90%; }
 .login-logo { width: 100px; margin-bottom: 20px; }
 .login-box h2 { margin-bottom: 20px; color: var(--accent-amber); font-weight: 700; }

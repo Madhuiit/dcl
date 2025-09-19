@@ -15,8 +15,8 @@ ADMIN_PASSWORD = "dcl"
 INITIAL_TEAM_POINTS = 110000
 TEAMS = [
     "Naman Communication", "bhagat sing club", "Yaar Albela", "Maa Santoshi", "Ramdevariya",
-    "Maa Karni club", "Lemda Eleven", "Risingin Star", "Pareek Patrolium",
-    "Rajasthan Royal", "Baba Blastar", "khetarpal Eleven", "Zehrili Nagin"
+    "Maa Karni club", "Lemda Eleven", "Rising Star", "Pareek Patrolium",
+    "Rajasthan Royal", "Kevin XI", "khetarpal Eleven", "Dadoji Eleven" ,"Zabaj Cricket Club"
 ]
 auction_state = {}
 
