@@ -10,6 +10,9 @@
 <body>
     {% if session.logged_in %}
     <nav class="navbar">
+        
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Chairman" class="chairman-photo-nav">
+
         <div class="nav-title">DCL Auction</div>
         <div class="nav-links">
             <a href="{{ url_for('auction') }}" class="nav-link">Auction Room</a>

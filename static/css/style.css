@@ -18,8 +18,15 @@ body { font-family: 'Poppins', sans-serif; background-color: var(--bg-dark); col
 .main-content { height: calc(100vh - 65px); }
 
 /* --- Login Screen --- */
-#login-screen { display: flex; justify-content: center; align-items: center; height: 100vh; background: url('static/images/logo.png') no-repeat center center/cover; background-attachment: fixed; }
-.login-box { background: rgba(31, 41, 55, 0.8); backdrop-filter: blur(10px); padding: 40px; border-radius: 15px; text-align: center; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); border: 1px solid var(--ui-border); width: 400px; max-width: 90%; }
+#login-screen { 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    height: 100vh; 
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/static/images/chairman.png') no-repeat top center/cover; 
+    background-attachment: fixed; 
+}
+.login-box { background: rgba(237, 238, 240, 0); backdrop-filter: blur(1px); padding: 40px; border-radius: 15px; text-align: center; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); border: 1px solid var(--ui-border); width: 400px; max-width: 90%; }
 .login-logo { width: 100px; margin-bottom: 20px; }
 .login-box h2 { margin-bottom: 20px; color: var(--accent-amber); font-weight: 700; }
 #login-screen input { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid var(--ui-border); background: rgba(17, 24, 39, 0.5); color: var(--text-light); border-radius: 5px; font-size: 1rem; }
@@ -137,4 +144,35 @@ body { font-family: 'Poppins', sans-serif; background-color: var(--bg-dark); col
     .auction-main-area { flex-direction: column; } /* Stack card and controls on mobile */
     #auction-controls { width: 100%; }
     #player-name { font-size: 2rem; }
+}
+
+
+/* --- Chairman Photo Styles --- */
+.chairman-photo-login {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%; /* Makes the image circular */
+    object-fit: cover; /* Prevents the image from stretching */
+    border: 3px solid var(--accent-amber);
+    margin-bottom: 15px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.4);
+}
+
+.chairman-photo-nav {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--ui-border);
+    margin-right: 15px; /* Adds space between the photo and the title */
+
+}
+
+/* New style for the Unsell button */
+.unsell-btn {
+    background-color: var(--unsold-red); /* Using the red color for unsold action */
+    color: white;
+}
+.unsell-btn:hover {
+    background-color: #CC3333; /* Slightly darker red on hover */
 }

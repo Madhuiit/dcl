@@ -14,7 +14,7 @@
                     {% if team_data.players %}
                         <ul>
                         {% for sale_info in team_data.players %}
-                            {# THE FIX: Look up the player, but handle cases where the player might not exist #}
+                            {# Look up the player, but handle cases where the player might not exist #}
                             {% set player = state.players.get(sale_info.id|string) %}
                             
                             {# Only display the list item if the player was successfully found #}
@@ -27,7 +27,7 @@
                                 <button class="edit-btn" 
                                         data-player-id="{{ player.id }}"
                                         data-player-name="{{ player.player_name }}"
-                                        data-team-name="{{ team_name }}"
+                                        data-current-team="{{ team_name }}" {# Store current team #}
                                         data-current-points="{{ sale_info.points }}">
                                     Edit
                                 </button>
@@ -46,15 +46,26 @@
 
 <div id="edit-modal" class="modal-overlay hidden">
     <div class="modal-content">
-        <h2>Edit Sale</h2>
+        <h2>Edit Player Sale / Unsell</h2>
         <h3 id="edit-modal-player-name"></h3>
         <form id="edit-form">
             <input type="hidden" id="edit-player-id">
-            <input type="hidden" id="edit-team-name">
+            <input type="hidden" id="edit-original-team-name"> {# To store the original team #}
+            
+            <label for="edit-new-team">New Team</label>
+            <select id="edit-new-team" required>
+                {# Options will be populated by JavaScript (though Jinja pre-populates default options) #}
+                {% for team_name in state.teams.keys()|sort %}
+                    <option value="{{ team_name }}">{{ team_name }}</option>
+                {% endfor %}
+            </select>
+
             <label for="edit-points">New Sale Points</label>
             <input type="number" id="edit-points" placeholder="Enter New Points" min="0" required>
+            
             <div class="modal-buttons">
                 <button type="submit" class="sold-btn">UPDATE SALE</button>
+                <button type="button" id="unsell-btn" class="unsell-btn">UNSELL PLAYER</button> {# New Unsell button #}
                 <button type="button" id="edit-modal-cancel-btn">Cancel</button>
             </div>
         </form>
@@ -67,8 +78,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const editForm = document.getElementById('edit-form');
     const editModalPlayerName = document.getElementById('edit-modal-player-name');
     const editPlayerIdInput = document.getElementById('edit-player-id');
-    const editTeamNameInput = document.getElementById('edit-team-name');
+    const editOriginalTeamNameInput = document.getElementById('edit-original-team-name');
+    const editNewTeamSelect = document.getElementById('edit-new-team');
     const editPointsInput = document.getElementById('edit-points');
+    const unsellBtn = document.getElementById('unsell-btn'); // New
     const editModalCancelBtn = document.getElementById('edit-modal-cancel-btn');
 
     document.querySelector('.teams-grid').addEventListener('click', (e) => {
@@ -76,7 +89,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const button = e.target;
             editModalPlayerName.textContent = button.dataset.playerName;
             editPlayerIdInput.value = button.dataset.playerId;
-            editTeamNameInput.value = button.dataset.teamName;
+            editOriginalTeamNameInput.value = button.dataset.currentTeam;
+            editNewTeamSelect.value = button.dataset.currentTeam;
             editPointsInput.value = button.dataset.currentPoints;
             editModal.classList.remove('hidden');
         }
@@ -86,15 +100,17 @@ document.addEventListener('DOMContentLoaded', () => {
         editModal.classList.add('hidden');
     });
 
+    // Handle Update Sale (existing functionality, but now includes newTeamName)
     editForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const payload = {
             playerId: parseInt(editPlayerIdInput.value, 10),
-            teamName: editTeamNameInput.value,
+            originalTeamName: editOriginalTeamNameInput.value,
+            newTeamName: editNewTeamSelect.value, // This is now passed for updates too
             newPoints: parseInt(editPointsInput.value, 10)
         };
 
-        const response = await fetch('/api/edit_sale', {
+        const response = await fetch('/api/transfer_sale', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(payload)
@@ -104,7 +120,32 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Sale updated successfully! The page will now reload.');
             location.reload();
         } else {
-            alert('Failed to update sale.');
+            const errorData = await response.json();
+            alert(`Failed to update sale: ${errorData.error || response.statusText}`);
+        }
+    });
+
+    // NEW: Handle Unsell Player
+    unsellBtn.addEventListener('click', async () => {
+        const playerId = parseInt(editPlayerIdInput.value, 10);
+        const originalTeamName = editOriginalTeamNameInput.value;
+        
+        if (!confirm(`Are you sure you want to unsell ${editModalPlayerName.textContent} from ${originalTeamName}?`)) {
+            return; // User cancelled
+        }
+
+        const response = await fetch('/api/unsell_player', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ playerId, teamName: originalTeamName })
+        });
+
+        if (response.ok) {
+            alert('Player unsell successfully! The page will now reload.');
+            location.reload();
+        } else {
+            const errorData = await response.json();
+            alert(`Failed to unsell player: ${errorData.error || response.statusText}`);
         }
     });
 });
