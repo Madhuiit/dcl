@@ -15,14 +15,14 @@ app.secret_key = 'your_super_secret_key_change_me_for_real'
 
 # --- Configuration ---
 PLAYERS_FILE = 'players.json'
-ADMIN_PASSWORD = "dcl"
+ADMIN_PASSWORD = "dcL10"
 INITIAL_TEAM_POINTS = 110000
 MINIMUM_TEAM_SIZE = 13
 MINIMUM_BID = 500
 TEAMS = [
     "Naman Communication", "bhagat sing club", "Yaar Albela", "Maa Santoshi", "Ramdevariya",
     "Maa Karni club", "Lemda Eleven", "Risingin Star", "Pareek Patrolium",
-    "Rajasthan Royal", "Baba Blastar", "khetarpal Eleven", "Zehrili Nagin"
+    "Rajasthan Royal", "Kevin XI", "khetarpal Eleven", "Dadoji Eleven","Jabaz Eleven","Rivew Later"
 ]
 
 # --- Database/State Configuration ---
