@@ -22,7 +22,7 @@ MINIMUM_BID = 500
 TEAMS = [
     "Naman Communication", "bhagat sing club", "Yaar Albela", "Maa Santoshi", "Ramdevariya",
     "Maa Karni club", "Lemda Eleven", "Risingin Star", "Pareek Patrolium",
-    "Rajasthan Royal", "Kevin XI", "khetarpal Eleven", "Dadoji Eleven","Jabaz Eleven","Rivew Later"
+    "Rajasthan Royal", "Kevin XI", "khetarpal Eleven", "Dadoji Eleven","Jabaz Eleven","Review Later"
 ]
 
 # --- Database/State Configuration ---
