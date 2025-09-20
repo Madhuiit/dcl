@@ -8,7 +8,10 @@
             <div class="team-card">
                 <div class="team-card-header">
                     <h2>{{ team_name }}</h2>
-                    <span class="team-points">{{ "{:,}".format(team_data.points) }} PTS</span>
+                    <div class="team-points-container">
+                        <span class="team-points-available">{{ "{:,}".format(team_data.bidding_power) }} PTS Available</span>
+                        <span class="team-points-total">{{ "{:,}".format(team_data.points) }} PTS Total</span>
+                    </div>
                 </div>
                 <div class="team-roster">
                     {% if team_data.players %}
@@ -44,6 +47,7 @@
     </div>
 </div>
 
+{# --- EDIT MODAL (NOW CORRECTLY INCLUDED) --- #}
 <div id="edit-modal" class="modal-overlay hidden">
     <div class="modal-content">
         <h2>Edit Player Sale / Unsell</h2>
@@ -61,17 +65,18 @@
             </select>
 
             <label for="edit-points">New Sale Points</label>
-            <input type="number" id="edit-points" placeholder="Enter New Points" min="0" required>
+            <input type="number" id="edit-points" placeholder="Enter New Points" min="0" step="1" required>
             
             <div class="modal-buttons">
                 <button type="submit" class="sold-btn">UPDATE SALE</button>
-                <button type="button" id="unsell-btn" class="unsell-btn">UNSELL PLAYER</button> {# New Unsell button #}
+                <button type="button" id="unsell-btn" class="unsell-btn">UNSELL PLAYER</button>
                 <button type="button" id="edit-modal-cancel-btn">Cancel</button>
             </div>
         </form>
     </div>
 </div>
 
+{# --- SCRIPT FOR THE EDIT MODAL --- #}
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const editModal = document.getElementById('edit-modal');
@@ -81,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const editOriginalTeamNameInput = document.getElementById('edit-original-team-name');
     const editNewTeamSelect = document.getElementById('edit-new-team');
     const editPointsInput = document.getElementById('edit-points');
-    const unsellBtn = document.getElementById('unsell-btn'); // New
+    const unsellBtn = document.getElementById('unsell-btn');
     const editModalCancelBtn = document.getElementById('edit-modal-cancel-btn');
 
     document.querySelector('.teams-grid').addEventListener('click', (e) => {
@@ -100,13 +105,13 @@ document.addEventListener('DOMContentLoaded', () => {
         editModal.classList.add('hidden');
     });
 
-    // Handle Update Sale (existing functionality, but now includes newTeamName)
+    // Handle Update Sale
     editForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const payload = {
             playerId: parseInt(editPlayerIdInput.value, 10),
             originalTeamName: editOriginalTeamNameInput.value,
-            newTeamName: editNewTeamSelect.value, // This is now passed for updates too
+            newTeamName: editNewTeamSelect.value,
             newPoints: parseInt(editPointsInput.value, 10)
         };
 
@@ -125,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // NEW: Handle Unsell Player
+    // Handle Unsell Player
     unsellBtn.addEventListener('click', async () => {
         const playerId = parseInt(editPlayerIdInput.value, 10);
         const originalTeamName = editOriginalTeamNameInput.value;

@@ -267,7 +267,7 @@
         "id": 45,
         "player_name": "GOVIND RAMJI ",
         "father_name": "PARMESHWAR LAL ",
-        "photo": "static/images/govindpareek.JPEG"
+        "photo": "static/images/govindpareek.jpeg"
     },
     {
         "id": 46,
@@ -885,7 +885,7 @@
         "id": 148,
         "player_name": "RUPESH BOHARA ",
         "father_name": "GANGADHAR BOHARA ",
-        "photo": " static/images/Rupesh.jpg"
+        "photo": "static/images/Rupesh.jpg"
     },
     {
         "id": 149,

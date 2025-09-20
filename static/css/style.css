@@ -176,3 +176,33 @@ body { font-family: 'Poppins', sans-serif; background-color: var(--bg-dark); col
 .unsell-btn:hover {
     background-color: #CC3333; /* Slightly darker red on hover */
 }
+
+/* --- New Styles for Bidding Rules --- */
+.max-bid-warning {
+    color: var(--accent-amber);
+    font-weight: 600;
+    margin-top: -10px;
+    margin-bottom: 20px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    height: 0;
+}
+.max-bid-warning.visible {
+    opacity: 1;
+    height: auto;
+}
+
+.team-points-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+.team-points-available {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--sold-green);
+}
+.team-points-total {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}

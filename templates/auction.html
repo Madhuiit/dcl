@@ -3,17 +3,13 @@
 {% block content %}
 <div class="auction-layout-focused">
     <div class="auction-panel-focused">
-        
         <div class="auction-main-area">
-            <div id="player-card">
-                </div>
-            
+            <div id="player-card"></div>
             <div id="auction-controls">
                 <div class="search-container">
                     <input type="text" id="player-search" placeholder="Search Player by Name/ID...">
                     <div id="search-results" class="search-results-container hidden"></div>
                 </div>
-                
                 <button id="next-btn">Next Random Player</button>
                 <div class="decision-buttons">
                     <button id="sold-btn">SELL PLAYER</button>
@@ -22,7 +18,6 @@
                 <button id="undo-btn">Undo Last Sale</button>
             </div>
         </div>
-
     </div>
 </div>
 
@@ -31,10 +26,10 @@
         <h2>Sell Player</h2>
         <h3 id="modal-player-name"></h3>
         <form id="sell-form">
-            <input type="number" id="sell-points" placeholder="Enter Points" min="0" required>
-            <select id="sell-team" required>
-                <option value="" disabled selected>Select a Team</option>
-            </select>
+            <input type="number" id="sell-points" placeholder="Enter Points" min="0" step="1" required> {# Added step="1" #}
+            <select id="sell-team" required></select>
+            {# NEW: This div will display the max bid warning #}
+            <div id="max-bid-warning" class="max-bid-warning"></div> 
             <div class="modal-buttons">
                 <button type="submit" class="sold-btn">CONFIRM SALE</button>
                 <button type="button" id="modal-cancel-btn">Cancel</button>

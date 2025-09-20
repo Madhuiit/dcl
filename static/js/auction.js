@@ -20,18 +20,23 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     async function apiCall(endpoint, method = 'GET', body = null) {
-        const options = { method, headers: { 'Content-Type': 'application/json' } };
-        if (body) options.body = JSON.stringify(body);
-        try {
-            const response = await fetch(endpoint, options);
-            if (!response.ok) throw new Error(`API call failed: ${response.statusText}`);
-            return response.json();
-        } catch (error) {
-            alert(`An error occurred: ${error.message}`);
-            return null;
+    const options = { method, headers: { 'Content-Type': 'application/json' } };
+    if (body) options.body = JSON.stringify(body);
+    try {
+        const response = await fetch(endpoint, options);
+        // If the response is not OK, try to parse the JSON error message
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || `API call failed: ${response.statusText}`);
         }
+        return response.json();
+    } catch (error) {
+        // Now the alert will show the specific message from the server
+        alert(`Error: ${error.message}`);
+        console.error(`Error with ${method} ${endpoint}:`, error);
+        return null;
     }
-
+}
     function render(newState) {
         if (!newState) return;
         state = newState;
