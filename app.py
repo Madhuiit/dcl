@@ -5,8 +5,6 @@ import pandas as pd
 import io
 
 # --- Environment Detection ---
-# This is the key to making the app work in both environments.
-# It checks for an environment variable that only exists on Google Cloud.
 IS_PRODUCTION = os.getenv('GAE_ENV', '').startswith('standard')
 
 # --- Flask App Initialization ---
@@ -15,7 +13,7 @@ app.secret_key = 'your_super_secret_key_change_me_for_real'
 
 # --- Configuration ---
 PLAYERS_FILE = 'players.json'
-ADMIN_PASSWORD = "dcL10"
+ADMIN_PASSWORD = "night10"
 INITIAL_TEAM_POINTS = 110000
 MINIMUM_TEAM_SIZE = 13
 MINIMUM_BID = 500
@@ -33,7 +31,6 @@ if IS_PRODUCTION:
     STATE_DOC_REF = db.collection('auction').document('state')
     print("Running in PRODUCTION mode (using Firestore).")
 else:
-    # For local development, we define the STATE_FILE path
     STATE_FILE = 'auction_state.json'
     print("Running in LOCAL DEVELOPMENT mode (using JSON file).")
 
@@ -82,8 +79,7 @@ def load_state():
                 with open(STATE_FILE, 'r', encoding='utf-8') as f:
                     data = json.load(f)
                     if 'teams' in data and 'players' in data:
-                        auction_state = data
-                        print("SUCCESS: Auction state loaded from local file.")
+                        auction_state = data; print("SUCCESS: Auction state loaded from local file.")
                         return
             except Exception as e:
                 print(f"WARNING: Local state file corrupt: {e}. Re-initializing.")
@@ -101,7 +97,7 @@ def check_and_load_state():
     if not auction_state and request.endpoint not in ['static', 'login']:
         load_state()
 
-# --- ROUTES & API (No changes needed below) ---
+# --- ROUTES & API ---
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -164,45 +160,62 @@ def next_player():
     if not unsold_ids: return jsonify(None)
     player_id = random.choice(unsold_ids)
     return jsonify(auction_state['players'][str(player_id)])
+
+# --- CRITICAL FIX ---
+# This entire function has been rewritten for robust validation.
 @app.route('/api/transfer_sale', methods=['POST'])
 def transfer_sale():
     if not session.get('logged_in'): return jsonify({"error": "Not authenticated"}), 401
     data = request.json
-    player_id, original_team_name, new_team_name, new_points = data.get('playerId'), data.get('originalTeamName'), data.get('newTeamName'), data.get('newPoints')
+    player_id, original_team_name, new_team_name, new_points = data.get('playerId'), data.get('originalTeamName'), data.get('newTeamName'), int(data.get('newPoints'))
+    
     if not all([player_id, original_team_name, new_team_name, new_points is not None]):
         return jsonify({"error": "Missing data for transfer."}), 400
+
     original_team = auction_state['teams'].get(original_team_name)
     new_team = auction_state['teams'].get(new_team_name)
+
     if not original_team or not new_team:
-        return jsonify({"error": "Original or new team not found."}), 404
-    player_sale_info = None
-    for i, sale in enumerate(original_team['players']):
-        if sale['id'] == player_id:
-            player_sale_info = sale
-            original_team['players'].pop(i)
-            break
+        return jsonify({"error": "Team not found."}), 404
+
+    player_sale_info = next((p for p in original_team['players'] if p['id'] == player_id), None)
     if not player_sale_info:
-        return jsonify({"error": f"Player {player_id} not found in {original_team_name}'s roster."}), 404
-    old_points_paid = player_sale_info.get('points', 0)
-    original_team['points'] += old_points_paid
+        return jsonify({"error": f"Player not found in {original_team_name}'s roster."}), 404
+        
+    old_points = player_sale_info.get('points', 0)
+
+    # Temporarily remove the player and refund the points to calculate the TRUE max bid
+    original_team['players'].remove(player_sale_info)
+    original_team['points'] += old_points
+
+    # Determine the maximum allowed bid for the NEW team
+    max_bid_for_new_team = _calculate_bidding_power(new_team)
+
+    if new_points > max_bid_for_new_team:
+        # If validation fails, revert the temporary removal before sending error
+        original_team['players'].append(player_sale_info)
+        original_team['points'] -= old_points
+        return jsonify({"error": f"Edit failed. New price of {new_points:,} exceeds the maximum possible bid of {max_bid_for_new_team:,} for {new_team_name}."}), 400
+
+    # If validation succeeds, finalize the transaction
     player_sale_info['points'] = new_points
     new_team['players'].append(player_sale_info)
     new_team['points'] -= new_points
+    
     auction_state['last_transaction'] = None
     save_state()
     return jsonify({"success": True})
+
 @app.route('/api/unsell_player', methods=['POST'])
 def unsell_player():
     if not session.get('logged_in'): return jsonify({"error": "Not authenticated"}), 401
     data = request.json
     player_id, team_name = data.get('playerId'), data.get('teamName')
-    if not all([player_id, team_name]):
-        return jsonify({"error": "Missing data"}), 400
+    if not all([player_id, team_name]): return jsonify({"error": "Missing data"}), 400
     team = auction_state['teams'].get(team_name)
     if not team: return jsonify({"error": "Team not found."}), 404
     player_sale_info = next((p for p in team['players'] if p['id'] == player_id), None)
-    if not player_sale_info:
-        return jsonify({"error": "Player not found in team"}), 404
+    if not player_sale_info: return jsonify({"error": "Player not found in team"}), 404
     team['players'].remove(player_sale_info)
     team['points'] += player_sale_info.get('points', 0)
     if player_id not in auction_state['unsold_player_ids']:
